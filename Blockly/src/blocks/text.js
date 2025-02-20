@@ -27,32 +27,9 @@ const addText = {
   helpUrl: '',
 };
 
-const misty_drive  = {
-  type: 'misty_drive',
-  message0: 'Drive %1',
-  args0: [
-    {
-      type: 'field_dropdown',
-      name: 'DIRECTION',
-      options: [
-        ['forward', 'forward'],
-        ['backward', 'backward'],
-        ['left', 'left'],
-        ['right', 'right'],
-      ],
-    },
-  ],
-  previousStatement: null,
-  nextStatement: null,
-  colour: 160,
-  tooltip: '',
-  helpUrl: '',
-};
-
-
 // Create the block definitions for the JSON-only blocks.
 // This does not register their definitions with Blockly.
 // This file has no side effects!
 export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
-  addText, misty_drive
+  addText,
 ]);

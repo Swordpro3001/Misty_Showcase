@@ -50,21 +50,6 @@ export const toolbox = {
         },
       ],
     },
-
-
-    {
-      kind: 'category',
-      name: 'Misty',
-      categorystyle: 'misty_category',
-      contents: [
-        {
-          kind: 'block',
-          type: 'misty_drive',
-        }
-      ]
-    },
-
-
     {
       kind: 'category',
       name: 'Loops',
