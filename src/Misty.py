@@ -19,6 +19,9 @@ class Misty:
     def stop(self):
         self.mistyResponse("drive/stop")
 
+    def wait(self, tsec):
+        sleep(tsec)
+
     """ 
     Expression
     """
@@ -73,13 +76,13 @@ class Misty:
 
     def driveGrid(self):
         self.driveTimed(50, 0, 1330)
-        sleep(10)
+        sleep(7)
 
     def driveGridRev(self):
         self.driveTimed(-50, 0, 1330)
-        sleep(10)
+        sleep(7)
 
     # Turn
     def turnLeft(self):
-        self.driveTimed(0, 100, 4431)
-        sleep(10)
+        self.driveTimed(0, 100, 4435)
+        sleep(7)
