@@ -23,8 +23,10 @@ forBlock['add_text'] = function (block, generator) {
   textEl.innerText = text;
   outputDiv.appendChild(textEl);
 }`,
+
   );
   // Generate the function call for this block.
   const code = `${addText}(${text});\n`;
   return code;
 };
+

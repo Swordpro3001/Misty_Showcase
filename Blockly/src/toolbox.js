@@ -52,6 +52,33 @@ export const toolbox = {
     },
     {
       kind: 'category',
+      name: 'Misty',
+      categorystyle: 'misty_category',
+      contents: [
+        {
+          kind: 'block',
+          type: 'misty_drive',
+        },
+        {
+          kind: 'block',
+          type: 'misty_rotate',
+        },
+        {
+          kind: 'block',
+          type: 'misty_display_image',
+        },
+        {
+          kind : 'block',
+          type : 'misty_display_audio',
+        }, 
+        {
+          kind : 'block',
+          type : 'misty_display_text',
+        }
+      ]
+    },
+    {
+      kind: 'category',
       name: 'Loops',
       categorystyle: 'loop_category',
       contents: [
