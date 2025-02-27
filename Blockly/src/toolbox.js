@@ -57,6 +57,10 @@ export const toolbox = {
       contents: [
         {
           kind: 'block',
+          type: 'add_text'
+        },
+        {
+          kind: 'block',
           type: 'misty_drive',
         },
         {

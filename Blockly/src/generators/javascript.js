@@ -30,3 +30,8 @@ forBlock['add_text'] = function (block, generator) {
   return code;
 };
 
+forBlock['misty_drive'] = function (block, generator) {
+  const direction = block.getFieldValue('DIRECTION'); 
+  return null;
+}
+
