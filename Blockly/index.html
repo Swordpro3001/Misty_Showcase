@@ -61,9 +61,12 @@
     </category>
     <category name="Variables" colour="330" custom="VARIABLE"></category>
     <category name="Functions" colour="290" custom="PROCEDURE"></category>
-    <category name="Custom" colour="200">
+    <category name="Misty" colour="200">
       <block type="custom_function"></block>
       <block type="misty_drive"></block>
+      <block type="setLED"></block>
+      <block type="say"></block>
+      <block type="turnLeft"></block>
     </category>
   </xml>
   
@@ -90,7 +93,52 @@
         "args0":[{"type": "field_input", "name":"Blocks","Check":"Number"}],
         "previousStatement": null,
         "nextStatement": null,
-        "colour": 300
+        "colour": 200
+      },
+      {
+        "type": "setLED",
+        "message0": "LEDs auf %1",
+        "args0":[
+          {
+            "type":"field_colour", 
+            "name":"COLOUR", 
+            "colour":"ff4040",
+            "colourOptions":[
+              "#ff4040",
+              "#D7D9CE",
+              "#820263",
+              "#C97B84",
+              "#3B413C",
+              "#BDD2A6",
+              "#ECA72C",
+              "#FF5D73"
+            ],
+            "colourTitles":[
+              "Rot",
+              "Grau",
+              "Magenta",
+              "dunkel Rosa",
+              "Olive",
+              "Grün",
+              "Gelb",
+              "helles Pink"
+            ],
+            "columns": 2,
+          },
+        ],
+        "colour": 200
+      },
+      {
+        "type":"say",
+        "message0": "Sage: \" %1 \"",
+        "args0":[
+          {
+            "type": "field_input",
+            "name": "Value",
+            "check": "String"
+          }
+        ],
+        "colour": 200
       }
     ]);
 
