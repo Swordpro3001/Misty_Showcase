@@ -6,7 +6,7 @@ class Misty:
         self.ip = ip
         self.api_url = f"http://{self.ip}/api/"
 
-    def mistyResponse(self, command, parameters={}):
+    def mistyResponse(self, command, parameters):
         response = rq.post(f"{self.api_url}{command}", params=parameters)
         print(f"{self.api_url}{command}\n{response}\n{response.text}")
         print(parameters)
@@ -74,15 +74,21 @@ class Misty:
         }
         self.mistyResponse("drive/hdt", parameters)
 
+    # def driveGrid(self):
+    #     self.driveTimed(50, 0, 1330)
+    #     sleep(3)
+
     def driveGrid(self):
-        self.driveTimed(50, 0, 1330)
-        sleep(7)
+        for i in range(4):
+            self.driveTimed(50, 0, 647)
+            sleep(2)
+        sleep(3)
 
     def driveGridRev(self):
         self.driveTimed(-50, 0, 1330)
-        sleep(7)
+        sleep(3)
 
     # Turn
     def turnLeft(self):
         self.driveTimed(0, 100, 4435)
-        sleep(7)
+        sleep(5)
