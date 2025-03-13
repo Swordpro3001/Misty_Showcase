@@ -1,60 +1,97 @@
-koerner = [['', '', '', 'k', 'w'], 
-            ['w', 'w', '', 'w', 'w'], 
-            ['k', 'w', '', '', 'k'], 
-            ['', '', '', 'w', 'w'], 
-            ['', '', '', 'k', 'w']]
+import Misty
+from copy import deepcopy
 
-curI = 0 
-curJ = 0  
-rotation = 0 
+class Feld:
+    koerner = [
+        [' ', ' ', ' ', 'k', 'w'], 
+        ['w', 'w', ' ', 'w', 'w'], 
+        ['k', 'w', ' ', ' ', 'k'], 
+        [' ', ' ', ' ', 'w', 'w'], 
+        [' ', ' ', ' ', 'k', 'w']
+    ]
+  
+    def __init__(self, Misty):
+        self.curI = 0 
+        self.curJ = 0
+        self.rotation = 0
+        self.mist = Misty
+        self.rottable = [0, 1, 2, 3]
 
-def print_position():
-    print(f"Aktuelle Position: ({curI}, {curJ}), Richtung: {rotation}°")
+    def print_position(self):
+        print(f"Aktuelle Position: ({self.curI}, {self.curJ}), Richtung: {self.rottable[self.rotation]}")
 
-def rotate(direction):
-    global rotation
-    if direction == 'left':
-        rotation = (rotation - 90) % 360
-    elif direction == 'right':
-        rotation = (rotation + 90) % 360
-    print_position()
+    def print_grid(self):
+        grid = deepcopy(self.koerner)
+        grid[self.curI][self.curJ] = 'M'
+        for i in grid:
+            print(i)
+        print()
 
-def forward():
-    global curI, curJ
-    newI, newJ = curI, curJ
+    def rotate(self):
+        """
+        if direction == 'left':
+            self.rotation -= 1
+            self.rotation %= 4
+        elif direction == 'right':
+            self.rotation += 1
+            self.rotation %= 4
+        """
+        self.rotation -= 1
+        self.rotation %= 4
+        if self.mist != None:
+            self.mist.turnLeft()
+        self.print_position()
+
+    def forward(self):
+        newI, newJ = self.curI, self.curJ
     
-    if rotation == 0:  
-        newJ += 1
-    elif rotation == 90: 
-        newI += 1
-    elif rotation == 180:  
-        newJ -= 1
-    elif rotation == 270:
-        newI -= 1
+        if self.rottable[self.rotation] == 0:  
+            newJ += 1
+        elif self.rottable[self.rotation] == 1: 
+            newI += 1
+        elif self.rottable[self.rotation] == 2:  
+            newJ -= 1
+        elif self.rottable[self.rotation] == 3:
+            newI -= 1
     
-    if 0 <= newI < len(koerner) and 0 <= newJ < len(koerner[0]) and koerner[newI][newJ] != 'w':
-        curI, curJ = newI, newJ
-    print_position()
+        if 0 <= newI < len(self.koerner) and 0 <= newJ < len(self.koerner[0]) and self.koerner[newI][newJ] != 'w':
+            self.curI, self.curJ = newI, newJ
+            if self.mist != None:
+                mist.driveGrid()
+        #self.print_position()
+        self.print_grid()
 
-def getKorn():
-    if koerner[curI][curJ] == 'k':
-        print("Korn aufgesammelt!")
-        koerner[curI][curJ] = ''
-    else:
-        print("Kein Korn hier.")
-    print_position()
+    def getKorn(self):
+        if self.koerner[curI][curJ] == 'k':
+            print("Korn aufgesammelt!")
+            self.koerner[curI][curJ] = ''
+        else:
+            print("Kein Korn hier.")
+        self.print_position()
 
-test_moves = ['forward', 'forward', 'forward', 'getKorn', 'rotate_left', 'rotate_left', 'forward', 
+if __name__ == "__main__":
+    fld = Feld(None)
+    """
+    test_moves = ['forward', 'forward', 'forward', 'getKorn', 'rotate_left', 'rotate_left', 'forward', 
               'rotate_left', 'forward', 'forward', 'rotate_left', 'forward', 'forward', 'getKorn',
               'rotate_left', 'rotate_left', 'forward', 'forward', 'rotate_left', 'forward', 'forward', 
               'rotate_left', 'forward', 'getKorn']
 
-for move in test_moves:
-    if move == 'forward':
-        forward()
-    elif move == 'rotate_right':
-        rotate('right')
-    elif move == 'rotate_left':
-        rotate('left')
-    elif move == 'getKorn':
-        getKorn()
+    for move in test_moves:
+        if move == 'forward':
+            forward()
+        elif move == 'rotate_right':
+            rotate('right')
+        elif move == 'rotate_left':
+            rotate('left')
+        elif move == 'getKorn':
+            getKorn()
+    """
+    fld.print_grid()
+    fld.forward()
+    fld.forward()
+    fld.print_grid()
+    fld.rotate()
+    fld.rotate()
+    fld.rotate()
+    fld.forward()
