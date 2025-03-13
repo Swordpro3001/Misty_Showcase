@@ -25,8 +25,9 @@
       </div>
     </div>
   </div>
-  
+  <!-- Toolbox für Blockly -->
   <xml id="toolbox" style="display: none">
+    <!--Cathegorien-->
     <category name="Logic" colour="210">
       <block type="controls_if"></block>
       <block type="logic_compare"></block>
@@ -77,7 +78,7 @@
     const statusContainer = document.getElementById('statusContainer');
     const outputContainer = document.getElementById('outputContainer');
     
-    // 1. Definiere zuerst den benutzerdefinierten Block
+    // 1. Eigene Blöcke definieren
     Blockly.defineBlocksWithJsonArray([
       {
         "type": "custom_function",
@@ -104,6 +105,11 @@
       return 'meine_funktion()\n';
     };
 
+    pythonGenerator.forBlock['misty_drive'] = function(block) {
+      var value = block.getFieldValue('Blocks');
+      return 'misty_drive(' + value + ')\n';
+    };
+
     // 4. Erstelle den Workspace
     var workspace = Blockly.inject('blocklyDiv', {
       toolbox: document.getElementById('toolbox')
@@ -111,12 +117,12 @@
 
     function generatePythonCode() {
       // Basiscode, der die Funktion definiert und einen direkten Aufruf hinzufügt
-      var code = "def meine_funktion():\n    print(\"Hallo von meiner Funktion!\")\n\n";
+      var code = "def main():\n    print(\"Hallo von meiner Funktion!\")\n\n";
       
       // Wenn keine Blöcke im Workspace sind, fügen wir einen Funktionsaufruf manuell hinzu
       let blocklyCode = pythonGenerator.workspaceToCode(workspace);
       if (!blocklyCode || blocklyCode.trim() === "") {
-        blocklyCode = "# Füge hier Blöcke hinzu oder benutze den Standard-Funktionsaufruf\nmeine_funktion()  # Standard-Aufruf\n";
+        blocklyCode = "if __name__ == \'__main__\': \n     main()\n";
       }
       
       code += blocklyCode;
