@@ -91,8 +91,8 @@
         "colour": 200
       },
       {
-        "type": "misty_drive",
-        "message0": "drive %1 Block",
+        "type": "forward_fuer",
+        "message0": "Fahre %1 Blöcke nach vorne",
         "args0":[{"type": "field_input", "name":"Blocks","Check":"Number"}],
         "previousStatement": null,
         "nextStatement": null,
@@ -129,9 +129,21 @@
       return 'meine_funktion()\n';
     };
 
-    pythonGenerator.forBlock['misty_drive'] = function(block) {
+    pythonGenerator.forBlock['rotate'] = function(block) {
+      return 'rotate()\n';
+    };
+
+    pythonGenerator.forBlock['forward'] = function(block) {
+      return 'forward()\n';
+    };
+    
+    pythonGenerator.forBlock['forward_fuer'] = function(block) {
       var value = block.getFieldValue('Blocks');
       return 'misty_drive(' + value + ')\n';
+    };
+
+    pythonGenerator.forBlock['getKorn'] = function(block) {
+      return 'getKorn()\n';
     };
 
     // 4. Erstelle den Workspace
@@ -155,7 +167,7 @@
       
       // Zeige Status-Nachricht an
       statusContainer.textContent = "Status: Code generiert. " + 
-                                   (pyodideReady ? "Bereit zum Ausführen." : "Warte auf Python-Interpreter...");
+      (pyodideReady ? "Bereit zum Ausführen." : "Warte auf Python-Interpreter...");
       
       // Aktiviere den Ausführen-Button, wenn Pyodide bereit ist
       if (pyodideReady) {
@@ -176,21 +188,21 @@
         
         // Konfiguration für Std-Out-Umleitung
         await pyodide.runPythonAsync(`
-import sys
-from io import StringIO
+          import sys
+          from io import StringIO
 
-class StdoutCatcher:
-    def __init__(self):
-        self.value = ""
-    
-    def write(self, text):
-        self.value += text
-    
-    def flush(self):
-        pass
+          class StdoutCatcher:
+              def __init__(self):
+                  self.value = ""
+              
+              def write(self, text):
+                  self.value += text
+              
+              def flush(self):
+                  pass
 
-sys.stdout = StdoutCatcher()
-`);
+          sys.stdout = StdoutCatcher()
+        `);
 
         pyodideReady = true;
         statusContainer.textContent = "Status: Python-Interpreter bereit!";
