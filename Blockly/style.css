@@ -3,7 +3,6 @@
   }
   #blocklyDiv {
     width: 50%;
-    height: 890px;
   }
   #codeContainer {
     width: 50%;
@@ -51,4 +50,9 @@
     padding: 5px;
     background-color: #f0f0f0;
     border-left: 4px solid #2196F3;
+  }
+  #mainContainer {
+    max-width: 100% !important;
+    padding: 0;
+    height: 100vh;
   }
