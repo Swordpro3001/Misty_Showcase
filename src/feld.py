@@ -70,7 +70,7 @@ class Feld:
         self.print_position()
 
 if __name__ == "__main__":
-    fld = Feld(None)
+    fld = Feld(Misty=Misty.Misty(192.168.0.1))
     """
     test_moves = ['forward', 'forward', 'forward', 'getKorn', 'rotate_left', 'rotate_left', 'forward', 
               'rotate_left', 'forward', 'forward', 'rotate_left', 'forward', 'forward', 'getKorn',

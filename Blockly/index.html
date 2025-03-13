@@ -65,6 +65,7 @@
     <category name="Variables" colour="330" custom="VARIABLE"></category>
     <category name="Functions" colour="290" custom="PROCEDURE"></category>
     <category name="Custom" colour="200">
+      <block type="scope"></block>
       <block type="custom_function"></block>
       <block type="forward_fuer"></block>
       <block type="rotate"></block>
@@ -83,6 +84,27 @@
     
     // 1. Eigene Blöcke definieren
     Blockly.defineBlocksWithJsonArray([
+      {
+        "type": "scope",
+        "message0": "Scope mit IP %1",
+        "args0": [
+          {
+            "type": "field_input",
+            "name": "IP_ADDRESS",
+            "text": "192.168.1.1"
+          }
+        ],
+        "message1": "%1",
+        "args1": [
+          {
+            "type": "input_statement",
+            "name": "CODE"
+          }
+        ],
+        "colour": 230,
+        "tooltip": "Erstellt einen neuen Scope mit einer IP-Adresse.",
+        "helpUrl": ""
+      },
       {
         "type": "custom_function",
         "message0": "rufe meine Funktion auf",
@@ -125,25 +147,31 @@
     var pythonGenerator = Blockly.Python;
     
     // 3. Definiere die Codegenerierung für den benutzerdefinierten Block
+    pythonGenerator.forBlock['scope'] = function(block) {
+      var ip = block.getFieldValue('IP_ADDRESS');
+      var code = pythonGenerator.statementToCode(block, 'CODE');
+      return 'import Misty\n \nif __name__ == "__main__": \n  misty = Misty()\n  feld = Feld(misty)\n'  +code;
+    };
+
     pythonGenerator.forBlock['custom_function'] = function(block) {
-      return 'meine_funktion()\n';
+      return 'print("hallo World")\n';
     };
 
     pythonGenerator.forBlock['rotate'] = function(block) {
-      return 'rotate()\n';
+      return 'feld.rotate()\n';
     };
 
     pythonGenerator.forBlock['forward'] = function(block) {
-      return 'forward()\n';
+      return 'feld.forward()\n';
     };
     
     pythonGenerator.forBlock['forward_fuer'] = function(block) {
       var value = block.getFieldValue('Blocks');
-      return 'misty_drive(' + value + ')\n';
+      return 'feld.misty_drive(' + value + ')\n';
     };
 
     pythonGenerator.forBlock['getKorn'] = function(block) {
-      return 'getKorn()\n';
+      return 'feld.getKorn()\n';
     };
 
     // 4. Erstelle den Workspace
@@ -153,7 +181,7 @@
 
     function generatePythonCode() {
       // Basiscode, der die Funktion definiert und einen direkten Aufruf hinzufügt
-      var code = "def main():\n    print(\"Hallo von meiner Funktion!\")\n\n";
+      var code = "";
       
       // Wenn keine Blöcke im Workspace sind, fügen wir einen Funktionsaufruf manuell hinzu
       let blocklyCode = pythonGenerator.workspaceToCode(workspace);
@@ -186,9 +214,11 @@
           indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/"
         });
         
+        let response = await fetch("./src/Misty.py");
         // Konfiguration für Std-Out-Umleitung
         await pyodide.runPythonAsync(`
           import sys
+          import Misty
           from io import StringIO
 
           class StdoutCatcher:
