@@ -1,0 +1,41 @@
+{
+  "name": "misty_showcase",
+  "version": "1.0.0",
+  "description": "Misty Webview mit Blockly und Pyodide",
+  "homepage": "https://github.com/Swordpro3001/Misty_Showcase#readme",
+  "bugs": {
+    "url": "https://github.com/Swordpro3001/Misty_Showcase/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Swordpro3001/Misty_Showcase.git"
+  },
+  "license": "MIT",
+  "author": "Franz Puerto",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel ./Blockly/index.html --open",
+    "build": "parcel build ./Blockly/index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "blockly": "^10.1.0",
+    "bootstrap": "^5.0.2",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "pyodide": "^0.23.4"
+  },
+  "devDependencies": {
+    "parcel": "^2.9.3"
+  },
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "keywords": [
+    "Misty",
+    "Blockly",
+    "Pyodide",
+    "Web",
+    "Robotik"
+  ]
+}

@@ -5,6 +5,7 @@
   <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
   <script src="https://unpkg.com/blockly/blockly.min.js"></script>
   <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+
   <link href="./style.css" rel="stylesheet">
   </style>
 </head>
@@ -186,7 +187,7 @@
       // Wenn keine Blöcke im Workspace sind, fügen wir einen Funktionsaufruf manuell hinzu
       let blocklyCode = pythonGenerator.workspaceToCode(workspace);
       if (!blocklyCode || blocklyCode.trim() === "") {
-        blocklyCode = "if __name__ == \'__main__\': \n     main()\n";
+        blocklyCode = "if __name__ == \'__main__\': \n     print(\"Hello World\")\n";
       }
       
       code += blocklyCode;
@@ -213,12 +214,18 @@
         pyodide = await loadPyodide({
           indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/"
         });
-        
-        let response = await fetch("./src/Misty.py");
         // Konfiguration für Std-Out-Umleitung
         await pyodide.runPythonAsync(`
           import sys
           from io import StringIO
+          from pyodide.http import pyfetch
+
+          async def fetch_data():
+              response = await pyfetch("https://jsonplaceholder.typicode.com/todos/1")
+              data = await response.json()
+              print(data)
+
+          await fetch_data()
 
           class StdoutCatcher:
               def __init__(self):
@@ -237,7 +244,6 @@
         statusContainer.textContent = "Status: Python-Interpreter bereit!";
         outputContainer.textContent = "Python-Interpreter bereit! Generieren Sie Code und führen Sie ihn aus.";
         document.getElementById('runButton').disabled = false;
-        
         // Generiere Standard-Code
         generatePythonCode();
         
@@ -247,6 +253,7 @@
         outputContainer.textContent = "Fehler beim Laden des Python-Interpreters: " + error.message;
       }
     }
+
 
     async function runPythonCode() {
       if (!pyodideReady) {
@@ -258,12 +265,19 @@
       outputContainer.textContent = "Führe Code aus...";
       
       try {
+
+        let response = await fetch("./Misty.py");
+        if (!response.ok) throw new Error("Fehler beim Laden der Datei!");
+        let pythonCode = await response.text();
+        console.log(response.url);
+        console.log(pythonCode);
+        // Datei in Pyodide speichern (optional)
+        pyodide.FS.writeFile("Misty.py", pythonCode);
         // Ausgabe zurücksetzen
         await pyodide.runPythonAsync("sys.stdout.value = ''");
         
         // Code ausführen
         await pyodide.runPythonAsync(currentCode);
-        
         // Ausgabe abrufen und anzeigen
         const stdout = await pyodide.runPythonAsync("sys.stdout.value");
         

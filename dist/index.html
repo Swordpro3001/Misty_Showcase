@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+  <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+  <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+
+  <link href="/index.a48ced62.css" rel="stylesheet">
+  
+</head>
+<body style="height: 100vh">
+  <div class="container" id="mainContainer">
+    <div id="blocklyDiv"></div>
+    <div id="codeContainer">
+      <div>
+        <button id="generateButton">Python-Code generieren</button>
+        <button id="runButton" disabled="">Code ausführen</button>
+      </div>
+      <div class="status" id="statusContainer">Status: Initialisiere...</div>
+      <h3>Python-Code:</h3>
+      <pre id="pythonCode"># Hier wird der generierte Code angezeigt</pre>
+      <div>
+        <h3>Ausgabe:</h3>
+        <div id="outputContainer">Hier erscheint die Ausgabe...</div>
+      </div>
+    </div>
+  </div>
+  <!-- Toolbox für Blockly -->
+  <xml id="toolbox" style="display: none">
+    <!--Cathegorien-->
+    <category name="Logic" colour="210">
+      <block type="controls_if"></block>
+      <block type="logic_compare"></block>
+      <block type="logic_operation"></block>
+      <block type="logic_negate"></block>
+      <block type="logic_boolean"></block>
+    </category>
+    <category name="Loops" colour="120">
+      <block type="controls_repeat_ext"></block>
+      <block type="controls_whileUntil"></block>
+      <block type="controls_for"></block>
+      <block type="controls_flow_statements"></block>
+    </category>
+    <category name="Math" colour="230">
+      <block type="math_number"></block>
+      <block type="math_arithmetic"></block>
+      <block type="math_single"></block>
+      <block type="math_trig"></block>
+      <block type="math_constant"></block>
+      <block type="math_number_property"></block>
+    </category>
+    <category name="Text" colour="160">
+      <block type="text"></block>
+      <block type="text_join"></block>
+      <block type="text_append"></block>
+      <block type="text_length"></block>
+      <block type="text_isEmpty"></block>
+    </category>
+    <category name="Lists" colour="260">
+      <block type="lists_create_empty"></block>
+      <block type="lists_create_with"></block>
+      <block type="lists_length"></block>
+      <block type="lists_isEmpty"></block>
+    </category>
+    <category name="Variables" colour="330" custom="VARIABLE"></category>
+    <category name="Functions" colour="290" custom="PROCEDURE"></category>
+    <category name="Custom" colour="200">
+      <block type="scope"></block>
+      <block type="custom_function"></block>
+      <block type="forward_fuer"></block>
+      <block type="rotate"></block>
+      <block type="forward"></block>
+      <block type="getKorn"></block>
+    </category>
+  </xml>
+  
+  <script>// Globale Variablen
+let pyodideReady = false;
+let pyodide = null;
+let currentCode = "";
+const statusContainer = document.getElementById('statusContainer');
+const outputContainer = document.getElementById('outputContainer');
+// 1. Eigene Blöcke definieren
+Blockly.defineBlocksWithJsonArray([
+    {
+        "type": "scope",
+        "message0": "Scope mit IP %1",
+        "args0": [
+            {
+                "type": "field_input",
+                "name": "IP_ADDRESS",
+                "text": "192.168.1.1"
+            }
+        ],
+        "message1": "%1",
+        "args1": [
+            {
+                "type": "input_statement",
+                "name": "CODE"
+            }
+        ],
+        "colour": 230,
+        "tooltip": "Erstellt einen neuen Scope mit einer IP-Adresse.",
+        "helpUrl": ""
+    },
+    {
+        "type": "custom_function",
+        "message0": "rufe meine Funktion auf",
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": 200
+    },
+    {
+        "type": "forward_fuer",
+        "message0": "Fahre %1 Bl\xf6cke nach vorne",
+        "args0": [
+            {
+                "type": "field_input",
+                "name": "Blocks",
+                "Check": "Number"
+            }
+        ],
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": 300
+    },
+    {
+        "type": "rotate",
+        "message0": "drehe 90 Grad nach links",
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": 300
+    },
+    {
+        "type": "forward",
+        "message0": "fahre einen Block nach vorne",
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": 300
+    },
+    {
+        "type": "getKorn",
+        "message0": "nimm das Korn",
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": 300
+    }
+]);
+// 2. Python-Generator
+var pythonGenerator = Blockly.Python;
+// 3. Definiere die Codegenerierung für den benutzerdefinierten Block
+pythonGenerator.forBlock['scope'] = function(block) {
+    var ip = block.getFieldValue('IP_ADDRESS');
+    var code = pythonGenerator.statementToCode(block, 'CODE');
+    return 'import Misty\n \nif __name__ == "__main__": \n  misty = Misty()\n  feld = Feld(misty)\n' + code;
+};
+pythonGenerator.forBlock['custom_function'] = function(block) {
+    return 'print("hallo World")\n';
+};
+pythonGenerator.forBlock['rotate'] = function(block) {
+    return 'feld.rotate()\n';
+};
+pythonGenerator.forBlock['forward'] = function(block) {
+    return 'feld.forward()\n';
+};
+pythonGenerator.forBlock['forward_fuer'] = function(block) {
+    var value = block.getFieldValue('Blocks');
+    return 'feld.misty_drive(' + value + ')\n';
+};
+pythonGenerator.forBlock['getKorn'] = function(block) {
+    return 'feld.getKorn()\n';
+};
+// 4. Erstelle den Workspace
+var workspace = Blockly.inject('blocklyDiv', {
+    toolbox: document.getElementById('toolbox')
+});
+function generatePythonCode() {
+    // Basiscode, der die Funktion definiert und einen direkten Aufruf hinzufügt
+    var code = "";
+    // Wenn keine Blöcke im Workspace sind, fügen wir einen Funktionsaufruf manuell hinzu
+    let blocklyCode = pythonGenerator.workspaceToCode(workspace);
+    if (!blocklyCode || blocklyCode.trim() === "") blocklyCode = "if __name__ == \'__main__\': \n     print(\"Hello World\")\n";
+    code += blocklyCode;
+    document.getElementById('pythonCode').textContent = code;
+    currentCode = code;
+    // Zeige Status-Nachricht an
+    statusContainer.textContent = "Status: Code generiert. " + (pyodideReady ? "Bereit zum Ausf\xfchren." : "Warte auf Python-Interpreter...");
+    // Aktiviere den Ausführen-Button, wenn Pyodide bereit ist
+    if (pyodideReady) document.getElementById('runButton').disabled = false;
+}
+// Vorbereitung für Pyodide (Python im Browser)
+async function initPyodide() {
+    try {
+        statusContainer.textContent = "Status: Lade Python-Interpreter...";
+        outputContainer.textContent = "Initialisiere Python...";
+        // Korrekte Initialisierung von Pyodide
+        pyodide = await loadPyodide({
+            indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/"
+        });
+        // Konfiguration für Std-Out-Umleitung
+        await pyodide.runPythonAsync(`
+          import sys
+          from io import StringIO
+          from pyodide.http import pyfetch
+
+          async def fetch_data():
+              response = await pyfetch("https://jsonplaceholder.typicode.com/todos/1")
+              data = await response.json()
+              print(data)
+
+          await fetch_data()
+
+          class StdoutCatcher:
+              def __init__(self):
+                  self.value = ""
+              
+              def write(self, text):
+                  self.value += text
+              
+              def flush(self):
+                  pass
+
+          sys.stdout = StdoutCatcher()
+        `);
+        pyodideReady = true;
+        statusContainer.textContent = "Status: Python-Interpreter bereit!";
+        outputContainer.textContent = "Python-Interpreter bereit! Generieren Sie Code und f\xfchren Sie ihn aus.";
+        document.getElementById('runButton').disabled = false;
+        // Generiere Standard-Code
+        generatePythonCode();
+    } catch (error) {
+        console.error("Pyodide-Initialisierungsfehler:", error);
+        statusContainer.textContent = "Status: Fehler bei der Initialisierung!";
+        outputContainer.textContent = "Fehler beim Laden des Python-Interpreters: " + error.message;
+    }
+}
+async function runPythonCode() {
+    if (!pyodideReady) {
+        outputContainer.textContent = "Python-Interpreter wird noch geladen oder konnte nicht initialisiert werden.";
+        return;
+    }
+    statusContainer.textContent = "Status: F\xfchre Code aus...";
+    outputContainer.textContent = "F\xfchre Code aus...";
+    try {
+        let response = await fetch("./Misty.py");
+        if (!response.ok) throw new Error("Fehler beim Laden der Datei!");
+        let pythonCode = await response.text();
+        console.log(response.url);
+        console.log(pythonCode);
+        // Datei in Pyodide speichern (optional)
+        pyodide.FS.writeFile("Misty.py", pythonCode);
+        // Ausgabe zurücksetzen
+        await pyodide.runPythonAsync("sys.stdout.value = ''");
+        // Code ausführen
+        await pyodide.runPythonAsync(currentCode);
+        // Ausgabe abrufen und anzeigen
+        const stdout = await pyodide.runPythonAsync("sys.stdout.value");
+        if (stdout && stdout.trim() !== "") outputContainer.textContent = stdout;
+        else outputContainer.textContent = "Code ausgef\xfchrt, aber es wurde keine Ausgabe erzeugt. \xdcberpr\xfcfen Sie den Code.";
+        statusContainer.textContent = "Status: Code-Ausf\xfchrung abgeschlossen.";
+    } catch (error) {
+        console.error("Ausf\xfchrungsfehler:", error);
+        outputContainer.textContent = "Fehler bei der Ausf\xfchrung: " + error.message;
+        statusContainer.textContent = "Status: Fehler bei der Ausf\xfchrung!";
+    }
+}
+// Event-Listener hinzufügen
+document.getElementById('generateButton').addEventListener('click', generatePythonCode);
+document.getElementById('runButton').addEventListener('click', runPythonCode);
+// Pyodide beim Laden der Seite initialisieren
+window.addEventListener('DOMContentLoaded', function() {
+    initPyodide();
+});
+
+</script>
+<script src="/Blockly.49e7c52e.js"></script></body>
+</html>
