@@ -13,11 +13,12 @@
   "license": "MIT",
   "author": "Franz Puerto",
   "type": "module",
-  "main": "index.js",
-    "scripts": {
-    "start": "parcel ./Blockly/index.html --open",
-    "build": "parcel build ./Blockly/index.html"
+  "main": "server.js",
+  "scripts": {
+    "dev": "parcel ./Blockly/index.html",
+    "start": "node server.js"
   },
+
   "dependencies": {
     "blockly": "^10.1.0",
     "bootstrap": "^5.0.2",
@@ -28,7 +29,7 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "parcel": "^2.9.3",
+    "parcel": "^2.14.1",
     "rimraf": "^6.0.1"
   },
   "browserslist": "> 0.5%, last 2 versions, not dead",
