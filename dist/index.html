@@ -5,6 +5,7 @@
   <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
   <script src="https://unpkg.com/blockly/blockly.min.js"></script>
   <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+  <link href="/Misty.b36eb31f.py" rel="script">
 
   <link href="/index.a48ced62.css" rel="stylesheet">
   
@@ -153,7 +154,7 @@ var pythonGenerator = Blockly.Python;
 pythonGenerator.forBlock['scope'] = function(block) {
     var ip = block.getFieldValue('IP_ADDRESS');
     var code = pythonGenerator.statementToCode(block, 'CODE');
-    return 'import Misty\n \nif __name__ == "__main__": \n  misty = Misty()\n  feld = Feld(misty)\n' + code;
+    return 'from Misty.py import Misty\n \nif __name__ == "__main__": \n  misty = Misty()\n  feld = Feld(misty)\n' + code;
 };
 pythonGenerator.forBlock['custom_function'] = function(block) {
     return 'print("hallo World")\n';
@@ -198,11 +199,18 @@ async function initPyodide() {
         pyodide = await loadPyodide({
             indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/"
         });
+        const response = await fetch('./Misty.py');
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const mistyPyCode = await response.text();
+        // Die Datei in das virtuelle Dateisystem schreiben
+        //pyodide.FS.writeFile("Misty.py", mistyPyCode);
         // Konfiguration für Std-Out-Umleitung
         await pyodide.runPythonAsync(`
           import sys
+          import asyncio
           from io import StringIO
           from pyodide.http import pyfetch
+          from Misty.py import Misty
 
           async def fetch_data():
               response = await pyfetch("https://jsonplaceholder.typicode.com/todos/1")
@@ -221,7 +229,7 @@ async function initPyodide() {
               def flush(self):
                   pass
 
-          sys.stdout = StdoutCatcher()
+          sys.stdout = StdoutCatcher()  
         `);
         pyodideReady = true;
         statusContainer.textContent = "Status: Python-Interpreter bereit!";
@@ -243,13 +251,87 @@ async function runPythonCode() {
     statusContainer.textContent = "Status: F\xfchre Code aus...";
     outputContainer.textContent = "F\xfchre Code aus...";
     try {
-        let response = await fetch("./Misty.py");
-        if (!response.ok) throw new Error("Fehler beim Laden der Datei!");
-        let pythonCode = await response.text();
-        console.log(response.url);
-        console.log(pythonCode);
-        // Datei in Pyodide speichern (optional)
-        pyodide.FS.writeFile("Misty.py", pythonCode);
+        /**
+        const mistycode = `
+import asyncio
+from pyodide.http import pyfetch
+
+class Misty:
+    def __init__(self, ip):
+        self.ip = ip
+        self.api_url = f"http://{self.ip}/api/"
+
+    async def mistyResponse(self, command, parameters=None):
+        url = f"{self.api_url}{command}"
+        response = await pyfetch(url, method="POST", body=str(parameters) if parameters else None)
+        text = await response.text()
+        print(parameters)
+
+    async def halt(self):
+        await self.mistyResponse("halt")
+
+    async def stop(self):
+        await self.mistyResponse("drive/stop")
+
+    async def wait(self, tsec):
+        await asyncio.sleep(tsec)
+
+    async def setLEDHex(self, hex):
+        hexint = int(hex, 16)
+        await self.setLEDRGB(hexint & 0xFF, (hexint >> 8) & 0xFF, (hexint >> 16) & 0xFF)
+
+    async def setLEDRGB(self, r, g, b):
+        parameters = {
+            "red": r,
+            "green": g,
+            "blue": b
+        }
+        await self.mistyResponse("led", parameters)
+
+    async def say(self, text):
+        parameters = {"Text": text}
+        await self.mistyResponse("tts/speak", parameters)
+
+    async def drive(self, linvel, angvel):
+        parameters = {
+            "LinearVelocity": linvel,
+            "AngularVelocity": angvel,
+        }
+        await self.mistyResponse("drive", parameters)
+
+    async def driveTimed(self, linvel, angvel, timems):
+        parameters = {
+            "LinearVelocity": linvel,
+            "AngularVelocity": angvel,
+            "TimeMS": timems,
+        }
+        await self.mistyResponse("drive/time", parameters)
+
+    async def driveDistance(self, heading, distance, timems, reverse):
+        parameters = {
+            "Heading": heading,
+            "Distance": distance,
+            "TimeMS": timems,
+            "Reverse": reverse,
+        }
+        await self.mistyResponse("drive/hdt", parameters)
+
+    async def driveGrid(self):
+        for _ in range(4):
+            await self.driveTimed(50, 0, 647)
+            await asyncio.sleep(2)
+        await asyncio.sleep(3)
+
+    async def driveGridRev(self):
+        await self.driveTimed(-50, 0, 1330)
+        await asyncio.sleep(3)
+
+    async def turnLeft(self):
+        await self.driveTimed(0, 100, 4435)
+        await asyncio.sleep(5)
+        `;
+    **/ // Datei in Pyodide speichern (optional)
+        //pyodide.FS.writeFile("Misty.py", mistycode);
         // Ausgabe zurücksetzen
         await pyodide.runPythonAsync("sys.stdout.value = ''");
         // Code ausführen
