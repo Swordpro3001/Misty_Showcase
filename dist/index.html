@@ -154,7 +154,7 @@ var pythonGenerator = Blockly.Python;
 pythonGenerator.forBlock['scope'] = function(block) {
     var ip = block.getFieldValue('IP_ADDRESS');
     var code = pythonGenerator.statementToCode(block, 'CODE');
-    return 'import Misty\n \nif __name__ == "__main__": \n  misty = Misty()\n  feld = Feld(misty)\n' + code;
+    return 'import Misty\n \nif __name__ == "__main__": \n  misty = Misty( "'+ip+'" )\n' + code;
 };
 pythonGenerator.forBlock['custom_function'] = function(block) {
     return 'print("hallo World")\n';
