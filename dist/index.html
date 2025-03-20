@@ -154,7 +154,7 @@ var pythonGenerator = Blockly.Python;
 pythonGenerator.forBlock['scope'] = function(block) {
     var ip = block.getFieldValue('IP_ADDRESS');
     var code = pythonGenerator.statementToCode(block, 'CODE');
-    return 'import Misty\n \nif __name__ == "__main__": \n  misty = Misty( "'+ip+'" )\n' + code;
+    return 'from Misty.py import Misty\n \nif __name__ == "__main__": \n  misty = Misty()\n  feld = Feld(misty)\n' + code;
 };
 pythonGenerator.forBlock['custom_function'] = function(block) {
     return 'print("hallo World")\n';
@@ -196,12 +196,16 @@ async function initPyodide() {
         statusContainer.textContent = "Status: Lade Python-Interpreter...";
         outputContainer.textContent = "Initialisiere Python...";
         // Korrekte Initialisierung von Pyodide
-        pyodide = await loadPyodide({
+        const pyodide = await loadPyodide({
             indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/"
         });
-        const response = await fetch('/static/Misty.py');
+        await pyodide.loadPackage("micropip"); // Lade das micropip-Modul
+        const micropip = pyodide.pyimport("micropip");
+        await micropip.install("requests"); // Installiert die Bibliothek 'requests'
+
+        pyodide.loadPackage("micropip");
+        const response = await fetch('static/Misty.py');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        await pyodide;
         const mistyPyCode = await response.text();
         pyodide.FS.writeFile("Misty.py", mistyPyCode);
         // Die Datei in das virtuelle Dateisystem schreiben
@@ -211,6 +215,9 @@ async function initPyodide() {
         await pyodide.runPythonAsync(`
           import sys
           import asyncio
+          import micropip
+          await micropip.install("requests")
+          import requests
           from io import StringIO
           from pyodide.http import pyfetch
 
@@ -253,8 +260,6 @@ async function runPythonCode() {
     statusContainer.textContent = "Status: F\xfchre Code aus...";
     outputContainer.textContent = "F\xfchre Code aus...";
     try {
-        // Datei in Pyodide speichern (optional)
-        //pyodide.FS.writeFile("Misty.py", mistycode);
         // Ausgabe zurücksetzen
         await pyodide.runPythonAsync("sys.stdout.value = ''");
         // Code ausführen
