@@ -154,7 +154,7 @@ var pythonGenerator = Blockly.Python;
 pythonGenerator.forBlock['scope'] = function(block) {
     var ip = block.getFieldValue('IP_ADDRESS');
     var code = pythonGenerator.statementToCode(block, 'CODE');
-    return 'from Misty.py import Misty\n \nif __name__ == "__main__": \n  misty = Misty()\n  feld = Feld(misty)\n' + code;
+    return 'from Misty import Misty\nfrom Feld import Feld\n\nif __name__ == "__main__": \n  misty = Misty( "'+ ip +'" )\n  feld = Feld(misty)\n' + code;
 };
 pythonGenerator.forBlock['custom_function'] = function(block) {
     return 'print("hallo World")\n';
@@ -196,30 +196,35 @@ async function initPyodide() {
         statusContainer.textContent = "Status: Lade Python-Interpreter...";
         outputContainer.textContent = "Initialisiere Python...";
         // Korrekte Initialisierung von Pyodide
-        const pyodide = await loadPyodide({
+        pyodide = await loadPyodide({
             indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/"
         });
         await pyodide.loadPackage("micropip"); // Lade das micropip-Modul
         const micropip = pyodide.pyimport("micropip");
         await micropip.install("requests"); // Installiert die Bibliothek 'requests'
 
-        pyodide.loadPackage("micropip");
-        const response = await fetch('static/Misty.py');
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const response = await fetch('/static/Misty.py');
+        if (!response.ok) throw new Error(`HTTP error Misty! status: ${response.status}`);
         const mistyPyCode = await response.text();
+        console.log(mistyPyCode);
         pyodide.FS.writeFile("Misty.py", mistyPyCode);
+        const response2 = await fetch('/static/Feld.py');
+        if (!response2.ok) throw new Error(`HTTP error Feld! status: ${response.status}`);
+        const feldPyCode = await response2.text();
+        console.log(feldPyCode);
+        pyodide.FS.writeFile("Feld.py", feldPyCode);
         // Die Datei in das virtuelle Dateisystem schreiben
         //pyodide.FS.writeFile("Misty.py", mistyPyCode);
         // Konfiguration für Std-Out-Umleitung
-        await pyodide.runPythonAsync("import Misty");
         await pyodide.runPythonAsync(`
           import sys
-          import asyncio
           import micropip
           await micropip.install("requests")
           import requests
           from io import StringIO
           from pyodide.http import pyfetch
+          from Misty import Misty
+          from Feld import Feld
 
           async def fetch_data():
               response = await pyfetch("https://jsonplaceholder.typicode.com/todos/1")

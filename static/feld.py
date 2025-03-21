@@ -47,7 +47,7 @@ class Feld:
     
         if self.rottable[self.rotation] == 0:  
             newJ += 1
-        elif self.rottable[self.rotation] == 1: 
+        elif self.rottable[self.rotation] == 1:     
             newI += 1
         elif self.rottable[self.rotation] == 2:  
             newJ -= 1
@@ -57,7 +57,7 @@ class Feld:
         if 0 <= newI < len(self.koerner) and 0 <= newJ < len(self.koerner[0]) and self.koerner[newI][newJ] != 'w':
             self.curI, self.curJ = newI, newJ
             if self.mist != None:
-                mist.driveGrid()
+                self.mist.driveGrid()
         #self.print_position()
         self.print_grid()
 
