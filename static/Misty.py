@@ -13,11 +13,11 @@ class Misty:
 
     # Stop all motor control
     def halt(self):
-        self.mistyResponse("halt")
+        self.mistyResponse("halt","test")
 
     # Stop Moving
     def stop(self):
-        self.mistyResponse("drive/stop")
+        self.mistyResponse("drive/stop","test")
 
     def wait(self, tsec):
         sleep(tsec)
@@ -83,7 +83,7 @@ class Misty:
             self.driveTimed(50, 0, 647)
             sleep(2)
         sleep(3)
-
+        
     def driveGridRev(self):
         self.driveTimed(-50, 0, 1330)
         sleep(3)

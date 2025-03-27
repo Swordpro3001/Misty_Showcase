@@ -225,7 +225,7 @@
         pyodide.FS.writeFile("Misty.py", mistyPyCode);
         // Die Datei in das virtuelle Dateisystem schreiben
         //pyodide.FS.writeFile("Misty.py", mistyPyCode);
-        // Konfiguration für Std-Out-Umleitung
+        // Konfiguration für Std-Outn-Umleitung
         await pyodide.runPythonAsync("from Misty.py import Misty")
         await pyodide.runPythonAsync(`
           import sys

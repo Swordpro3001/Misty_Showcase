@@ -15,8 +15,7 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "dev": "parcel ./Blockly/index.html",
-    "start": "node server.js"
+    "start": "node server.js && parcel ./Blockly/index.html"
   },
 
   "dependencies": {
