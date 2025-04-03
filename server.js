@@ -1,12 +1,25 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import http from 'http';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 3000;
+const listen=8764;
+
+fs.readFile('./dist/index.html',function(err, html){
+    if(err) throw err;
+    
+    http.createServer(function(request, response) {  
+        response.writeHeader(200, {"Content-Type": "text/html"});  
+        response.write(html);  
+        response.end();  
+    }).listen(listen);
+});
 
 // Statischen Ordner bereitstellen
 app.use('/static', express.static(path.join(__dirname, 'static')));
