@@ -1,58 +1,111 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
+.navbar {
+  flex: 0 0 auto;
+  height: 56px;
+}
 .container {
-    display: flex;
-  }
-  #blocklyDiv {
-    width: 50%;
-  }
-  #codeContainer {
-    width: 50%;
-    padding: 10px;
-    background: #f4f4f4;
-    border-left: 1px solid #ccc;
-    overflow: auto;
-  }
-  pre {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-  }
-  #pythonCode {
-    background-color: #f8f8f8;
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-top: 10px;
-    max-height: 200px;
-    overflow-y: auto;
-  }
-  #outputContainer {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #000;
-    color: #fff;
-    font-family: monospace;
-    min-height: 100px;
-    max-height: 400px;
-    overflow-y: auto;
-  }
-  button {
-    padding: 8px 16px;
-    margin: 5px;
-    cursor: pointer;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-  }
-  button:hover {
-    background-color: #45a049;
-  }
-  .status {
-    margin-top: 10px;
-    padding: 5px;
-    background-color: #f0f0f0;
-    border-left: 4px solid #2196F3;
-  }
-  #mainContainer {
-    max-width: 100% !important;
-    padding: 0;
-    height: 100vh;
-  }
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+#blocklyDiv {
+  width: 50%;
+  height: 100%;
+}
+#codeContainer {
+  width: 50%;
+  padding: 10px;
+  background: #f4f4f4;
+  border-left: 1px solid #ccc;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+#pythonCode {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-top: 10px;
+  flex: 0 0 auto;
+  max-height: 30%;
+  overflow-y: auto;
+}
+#outputContainer {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #000;
+  color: #fff;
+  font-family: monospace;
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+button {
+  padding: 8px 16px;
+  margin: 5px;
+  cursor: pointer;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+button:hover {
+  background-color: #45a049;
+}
+.status {
+  margin-top: 10px;
+  padding: 5px;
+  background-color: #f0f0f0;
+  border-left: 4px solid #2196F3;
+}
+#mainContainer {
+  max-width: 100% !important;
+  padding: 0;
+  margin: 0;
+  height: calc(100% - 56px);
+}
+.buttons-container {
+  flex: 0 0 auto;
+}
+.output-section {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+h3 {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+/* Override Bootstrap button styles when needed */
+#generateButton, #runButton {
+  padding: 8px 16px;
+  margin: 5px;
+  border: none;
+  border-radius: 4px;
+}
+#generateButton {
+  background-color: #007bff;
+}
+#runButton {
+  background-color: #4CAF50;
+}
+#generateButton:hover {
+  background-color: #0069d9;
+}
+#runButton:hover {
+  background-color: #45a049;
+}
