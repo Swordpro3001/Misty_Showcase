@@ -65,4 +65,33 @@ button:hover {
   padding: 0;
   max-width: 100% !important;
 }
+
+#feld {
+  margin: 10px 0 10px 0;
+  height: 450px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.element {
+  width: 70px;
+  height: 70px; 
+  margin: 1px;
+  background-color: #9E8576;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grain {
+  width: 15px;
+  height: 10px; 
+  border-radius: 50%;
+  background-color: #E6E18F;
+}
 /*# sourceMappingURL=Blockly.a48ced62.css.map */
+
+.misty {
+  height: 50px;
+}

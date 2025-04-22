@@ -140,6 +140,6 @@ class Misty:
 
 if __name__ == "__main__":
     m = Misty("192.168.149.120")
-    m.drive(50, 0)
-    m.wait(3)
+    m.wait(2)
+    m.dance()
 

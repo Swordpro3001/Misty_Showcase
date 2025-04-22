@@ -62,9 +62,9 @@ class Feld:
         self.print_grid()
 
     def getKorn(self):
-        if self.koerner[curI][curJ] == 'k':
+        if self.koerner[self.curI][self.curJ] == 'k':
             print("Korn aufgesammelt!")
-            self.koerner[curI][curJ] = ''
+            self.koerner[self.curI][self.curJ] = ''
         else:
             print("Kein Korn hier.")
         self.print_position()
