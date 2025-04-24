@@ -1,97 +1,149 @@
-import Misty
+import requests
 from copy import deepcopy
 
 class Feld:
-    koerner = [
-        [' ', ' ', ' ', 'k', 'w'], 
-        ['w', 'w', ' ', 'w', 'w'], 
-        ['k', 'w', ' ', ' ', 'k'], 
-        [' ', ' ', ' ', 'w', 'w'], 
-        [' ', ' ', ' ', 'k', 'w']
-    ]
-  
-    def __init__(self, Misty):
+    def __init__(self, misty):
+        self.misty = misty
         self.curI = 0 
         self.curJ = 0
-        self.rotation = 0
-        self.mist = Misty
+        self.rotation = 0  # 0: East, 1: South, 2: West, 3: North
         self.rottable = [0, 1, 2, 3]
-
-    def print_position(self):
-        print(f"Aktuelle Position: ({self.curI}, {self.curJ}), Richtung: {self.rottable[self.rotation]}")
-
-    def print_grid(self):
-        grid = deepcopy(self.koerner)
-        grid[self.curI][self.curJ] = 'M'
-        for i in grid:
-            print(i)
-        print()
-
-    def rotate(self):
-        """
-        if direction == 'left':
-            self.rotation -= 1
-            self.rotation %= 4
-        elif direction == 'right':
-            self.rotation += 1
-            self.rotation %= 4
-        """
-        self.rotation -= 1
-        self.rotation %= 4
-        if self.mist != None:
-            self.mist.turnLeft()
-        self.print_position()
-
-    def forward(self):
+        # Initialize field with walls (w) and grains (k)
+        self.field = [
+            [' ', ' ', ' ', 'k', 'w'], 
+            ['w', 'w', ' ', 'w', 'w'], 
+            ['k', 'w', ' ', ' ', 'k'], 
+            [' ', ' ', ' ', 'w', 'w'], 
+            [' ', ' ', ' ', 'k', 'w']
+        ]
+        print(f"Initialized Feld with Misty at position ({self.curI}, {self.curJ}), direction: {self.rotation}")
+    
+    def get_position(self):
+        """Return current position as string 'row,col'"""
+        return f"{self.curI}{self.curJ}"
+    
+    def get_next_position(self):
+        """Calculate and return the next position based on current position and direction"""
         newI, newJ = self.curI, self.curJ
-    
-        if self.rottable[self.rotation] == 0:  
+        
+        if self.rottable[self.rotation] == 0:  # East
             newJ += 1
-        elif self.rottable[self.rotation] == 1:     
+        elif self.rottable[self.rotation] == 1:  # South
             newI += 1
-        elif self.rottable[self.rotation] == 2:  
+        elif self.rottable[self.rotation] == 2:  # West
             newJ -= 1
-        elif self.rottable[self.rotation] == 3:
+        elif self.rottable[self.rotation] == 3:  # North
             newI -= 1
+            
+        return f"{newI}{newJ}"
     
-        if 0 <= newI < len(self.koerner) and 0 <= newJ < len(self.koerner[0]) and self.koerner[newI][newJ] != 'w':
-            self.curI, self.curJ = newI, newJ
-            if self.mist != None:
-                self.mist.driveGrid()
-        #self.print_position()
-        self.print_grid()
-
-    def getKorn(self):
-        if self.koerner[curI][curJ] == 'k':
-            print("Korn aufgesammelt!")
-            self.koerner[curI][curJ] = ''
-        else:
-            print("Kein Korn hier.")
+    def print_position(self):
+        """Print current position and direction for debugging"""
+        directions = ["East", "South", "West", "North"]
+        print(f"Current position: ({self.curI}, {self.curJ}), Direction: {directions[self.rotation]}")
+    
+    def print_grid(self):
+        """Print current grid state with Misty's position"""
+        grid = deepcopy(self.field)
+        grid[self.curI][self.curJ] = 'M'
+        for row in grid:
+            print(row)
+        print()
+    
+    def rotate(self):
+        """Rotate Misty counter-clockwise (left turn)"""
+        prev_pos = self.get_position()
+        self.rotation = (self.rotation + 3) % 4  # Left turn is -1 or +3 in modulo 4
+        
+        print(f"Rotating left, new direction: {self.rotation}")
+        
+        # If connected to real Misty, send turn command
+        if self.misty and hasattr(self.misty, 'turnLeft'):
+            try:
+                self.misty.turnLeft()
+                print("Command sent to Misty: turnLeft")
+            except Exception as e:
+                print(f"Failed to send command to Misty: {e}")
+        
         self.print_position()
+        return True
+    
+    def forward(self):
+        """Move Misty forward one cell in the current direction"""
+        prev_pos = self.get_position()
+        newI, newJ = self.curI, self.curJ
+        
+        # Calculate new position based on direction
+        if self.rottable[self.rotation] == 0:  # East
+            newJ += 1
+        elif self.rottable[self.rotation] == 1:  # South
+            newI += 1
+        elif self.rottable[self.rotation] == 2:  # West
+            newJ -= 1
+        elif self.rottable[self.rotation] == 3:  # North
+            newI -= 1
+        
+        # Check if the new position is valid
+        if 0 <= newI < len(self.field) and 0 <= newJ < len(self.field[0]) and self.field[newI][newJ] != 'w':
+            self.curI, self.curJ = newI, newJ
+            
+            # If connected to real Misty, send drive command
+            if self.misty and hasattr(self.misty, 'driveGrid'):
+                try:
+                    self.misty.driveGrid()
+                    print("Command sent to Misty: driveGrid")
+                except Exception as e:
+                    print(f"Failed to send command to Misty: {e}")
+                    
+            print(f"Moved from {prev_pos} to {self.get_position()}")
+            self.print_grid()
+            return True
+        else:
+            print("Cannot move forward - either at edge of field or wall in the way")
+            self.print_grid()
+            return False
+    
+    def getKorn(self):
+        """Pick up grain at current position if available"""
+        if self.field[self.curI][self.curJ] == 'k':
+            print(f"Grain picked up at position ({self.curI}, {self.curJ})")
+            self.field[self.curI][self.curJ] = ' '
+            
+            # If connected to real Misty, send play sound command
+            if self.misty and hasattr(self.misty, 'playSound'):
+                try:
+                    self.misty.playSound("s_Joy")
+                    print("Command sent to Misty: playSound")
+                except Exception as e:
+                    print(f"Failed to send command to Misty: {e}")
+                    
+            return True
+        else:
+            print(f"No grain at position ({self.curI}, {self.curJ})")
+            return False
+    
+    def misty_drive(self, steps):
+        """Move forward multiple steps"""
+        success = True
+        steps_taken = 0
+        
+        for _ in range(int(steps)):
+            if self.forward():
+                steps_taken += 1
+            else:
+                success = False
+                break
+        
+        print(f"Moved {steps_taken} steps out of {steps} requested")
+        return success
 
 if __name__ == "__main__":
-    fld = Feld(None)
-    """
-    test_moves = ['forward', 'forward', 'forward', 'getKorn', 'rotate_left', 'rotate_left', 'forward', 
-              'rotate_left', 'forward', 'forward', 'rotate_left', 'forward', 'forward', 'getKorn',
-              'rotate_left', 'rotate_left', 'forward', 'forward', 'rotate_left', 'forward', 'forward', 
-              'rotate_left', 'forward', 'getKorn']
-
-    for move in test_moves:
-        if move == 'forward':
-            forward()
-        elif move == 'rotate_right':
-            rotate('right')
-        elif move == 'rotate_left':
-            rotate('left')
-        elif move == 'getKorn':
-            getKorn()
-    """
-    fld.print_grid()
-    fld.forward()
-    fld.forward()
-    fld.print_grid()
-    fld.rotate()
-    fld.rotate()
-    fld.rotate()
-    fld.forward()
+    # Test with no actual Misty robot
+    field = Feld(None)
+    field.print_grid()
+    field.forward()
+    field.forward()
+    field.print_grid()
+    field.rotate()
+    field.forward()
+    field.getKorn()

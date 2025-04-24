@@ -3,7 +3,7 @@ let pyodideReady = false;
 let pyodide = null;
 let currentCode = "";
 let workspace = null;
-let useRealAPI = false; // New variable to track if we should use real API
+let useRealAPI = "False"; // New variable to track if we should use real API
 const statusContainer = document.getElementById('statusContainer');
 const outputContainer = document.getElementById('outputContainer');
 
@@ -205,9 +205,8 @@ function initBlockly() {
   
   // Add the new API toggle button event listener
   document.getElementById('apiToggle').addEventListener('change', function(e) {
-    useRealAPI = e.target.checked;
-    statusContainer.textContent = "Status: " + (useRealAPI ? "Using real Misty API" : "Using simulation only");
-    // Regenerate code to incorporate the new setting
+    useRealAPI = e.target.checked ? "True" : "False";  // Store as string
+    statusContainer.textContent = "Status: " + (useRealAPI === "True" ? "Using real Misty API" : "Using simulation only");
     generatePythonCode();
   });
   
