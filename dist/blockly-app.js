@@ -217,8 +217,8 @@ async function initPyodide() {
     const mistyPyCode = await response.text();
     pyodide.FS.writeFile("Misty.py", mistyPyCode);
     
-    const response2 = await fetch('/static/Feld.py');
-    if (!response2.ok) throw new Error(`HTTP error Feld! status: ${response.status}`);
+    const response2 = await fetch('/static/feld.py');
+    if (!response2.ok) throw new Error(`HTTP error Feld! status: ${response2.status}`);
     const feldPyCode = await response2.text();
     pyodide.FS.writeFile("Feld.py", feldPyCode);
     

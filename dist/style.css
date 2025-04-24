@@ -17,6 +17,16 @@ body {
   flex: 1;
   overflow: hidden;
 }
+.logo {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+}
 #blocklyDiv {
   width: 50%;
   height: 100%;
