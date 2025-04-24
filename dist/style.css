@@ -50,7 +50,7 @@ pre {
   padding: 10px;
   margin-top: 10px;
   flex: 0 0 auto;
-  max-height: 30%;
+  max-height: 25%;
   overflow-y: auto;
 }
 #outputContainer {
@@ -59,8 +59,20 @@ pre {
   background-color: #000;
   color: #fff;
   font-family: monospace;
-  flex: 1 1 auto;
+  flex: 0 0 20%;
   overflow-y: auto;
+}
+.field-simulation {
+  margin-top: 10px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+.simulation-container {
+  padding: 10px;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
 }
 button {
   padding: 8px 16px;
@@ -90,7 +102,7 @@ button:hover {
   flex: 0 0 auto;
 }
 .output-section {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -118,4 +130,79 @@ h3 {
 }
 #runButton:hover {
   background-color: #45a049;
+}
+
+/* Field Simulation Styles */
+.field {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+}
+.element {
+  width: 60px;
+  height: 60px;
+  border: 1px solid #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.grain {
+  width: 20px;
+  height: 20px;
+  background-color: #FFD700;
+  border-radius: 50%;
+}
+.misty {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  position: absolute;
+  z-index: 10;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .container {
+    flex-direction: column;
+  }
+  #blocklyDiv, #codeContainer {
+    width: 100%;
+    height: 50%;
+  }
+  #codeContainer {
+    border-left: none;
+    border-top: 1px solid #ccc;
+  }
+  .element {
+    width: 40px;
+    height: 40px;
+  }
+  .grain {
+    width: 15px;
+    height: 15px;
+  }
+  .misty {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 576px) {
+  .element {
+    width: 30px;
+    height: 30px;
+  }
+  .grain {
+    width: 10px;
+    height: 10px;
+  }
+  .misty {
+    width: 20px;
+    height: 20px;
+  }
 }
