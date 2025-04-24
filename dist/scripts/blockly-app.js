@@ -3,6 +3,7 @@ let pyodideReady = false;
 let pyodide = null;
 let currentCode = "";
 let workspace = null;
+let useRealAPI = false; // New variable to track if we should use real API
 const statusContainer = document.getElementById('statusContainer');
 const outputContainer = document.getElementById('outputContainer');
 
@@ -126,7 +127,7 @@ function definePythonGenerators() {
   pythonGenerator.forBlock['scope'] = function(block) {
     var ip = block.getFieldValue('IP_ADDRESS');
     var code = pythonGenerator.statementToCode(block, 'CODE');
-    // Add field simulation interface
+    // Add field simulation interface with API toggle
     return `from Misty import Misty
 from Feld import Feld
 import js
@@ -141,7 +142,8 @@ def updateField(command, from_pos=None, to_pos=None):
         js.window.fieldFunctions.reset()
 
 if __name__ == "__main__": 
-  misty = Misty("${ip}")
+  use_real_api = ${useRealAPI}  # Pass the toggle state to Python
+  misty = Misty("${ip}", use_real_api)
   feld = Feld(misty)
   # Reset field simulation
   updateField("reset")
@@ -201,6 +203,14 @@ function initBlockly() {
   document.getElementById('generateButton').addEventListener('click', generatePythonCode);
   document.getElementById('runButton').addEventListener('click', runPythonCode);
   
+  // Add the new API toggle button event listener
+  document.getElementById('apiToggle').addEventListener('change', function(e) {
+    useRealAPI = e.target.checked;
+    statusContainer.textContent = "Status: " + (useRealAPI ? "Using real Misty API" : "Using simulation only");
+    // Regenerate code to incorporate the new setting
+    generatePythonCode();
+  });
+  
   // Add template handlers
   setupTemplates();
 }
@@ -219,7 +229,8 @@ function generatePythonCode() {
   document.getElementById('pythonCode').textContent = code;
   currentCode = code;
   
-  statusContainer.textContent = "Status: Code generated. " + 
+  let apiStatus = useRealAPI ? "Using real Misty API. " : "Using simulation only. ";
+  statusContainer.textContent = "Status: Code generated. " + apiStatus + 
     (pyodideReady ? "Ready to run." : "Waiting for Python interpreter...");
   
   if (pyodideReady) {
@@ -248,9 +259,10 @@ async function initPyodide() {
       // Create a mock Misty class if we can't load the real one
       pyodide.FS.writeFile("Misty.py", `
 class Misty:
-    def __init__(self, ip):
+    def __init__(self, ip, use_real_api=False):
         self.ip = ip
-        print(f"Initialized Misty with IP: {ip}")
+        self.use_real_api = use_real_api
+        print(f"Initialized Misty with IP: {ip}, Using real API: {use_real_api}")
         self.position = "00"
         self.direction = 0  # 0: North, 1: East, 2: South, 3: West
     
@@ -265,10 +277,36 @@ class Misty:
         
     def set_direction(self, dir):
         self.direction = dir % 4
+        
+    def mistyResponse(self, command, parameters):
+        if self.use_real_api:
+            import requests as rq
+            response = rq.post(f"http://{self.ip}/api/{command}", params=parameters)
+            print(f"API Call: http://{self.ip}/api/{command}")
+            print(f"Parameters: {parameters}")
+            print(f"Response: {response.status_code}")
+        else:
+            print(f"SIMULATION: Would call API: {command}")
+            print(f"SIMULATION: With parameters: {parameters}")
 `);
     } else {
       const mistyPyCode = await response.text();
-      pyodide.FS.writeFile("Misty.py", mistyPyCode);
+      
+      // Modify the Misty class to handle the toggle
+      const modifiedMistyCode = mistyPyCode.replace(
+        'def __init__(self, ip):',
+        'def __init__(self, ip, use_real_api=False):\n        self.use_real_api = use_real_api'
+      ).replace(
+        'def mistyResponse(self, command, parameters):',
+        `def mistyResponse(self, command, parameters):
+        if not self.use_real_api:
+            print(f"SIMULATION: Would call API: {command}")
+            print(f"SIMULATION: With parameters: {parameters}")
+            return
+`
+      );
+      
+      pyodide.FS.writeFile("Misty.py", modifiedMistyCode);
     }
     
     const response2 = await fetch('/static/feld.py');
@@ -397,8 +435,9 @@ async function runPythonCode() {
     return;
   }
   
-  statusContainer.textContent = "Status: Running code...";
-  outputContainer.textContent = "Running code...";
+  let apiStatus = useRealAPI ? "with real API" : "in simulation mode";
+  statusContainer.textContent = `Status: Running code ${apiStatus}...`;
+  outputContainer.textContent = `Running code ${apiStatus}...`;
   
   try {
     // Reset output
@@ -415,7 +454,7 @@ async function runPythonCode() {
       outputContainer.textContent = "Code executed, but no output was generated. Check your code.";
     }
     
-    statusContainer.textContent = "Status: Code execution completed.";
+    statusContainer.textContent = `Status: Code execution completed ${apiStatus}.`;
   } catch (error) {
     console.error("Execution error:", error);
     outputContainer.textContent = "Error during execution: " + error.message;
