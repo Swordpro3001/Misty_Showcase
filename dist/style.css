@@ -36,9 +36,10 @@ body {
   padding: 10px;
   background: #f4f4f4;
   border-left: 1px solid #ccc;
-  overflow: auto;
+  overflow-y: auto; /* Change to vertical scrolling only */
   display: flex;
   flex-direction: column;
+  gap: 10px; /* Add spacing between sections */
 }
 pre {
   white-space: pre-wrap;
@@ -53,26 +54,37 @@ pre {
   max-height: 25%;
   overflow-y: auto;
 }
+#pythonCode, .output-section, .field-simulation {
+  min-height: 0; /* Allow sections to shrink if needed */
+}
 #outputContainer {
   margin-top: 10px;
   padding: 10px;
   background-color: #000;
   color: #fff;
   font-family: monospace;
-  flex: 0 0 20%;
+  height: 100px; /* Fixed height */
   overflow-y: auto;
 }
+
 .field-simulation {
-  margin-top: 10px;
-  flex: 1 1 auto;
+  margin-top: 20px;
+  flex: 0 0 auto; /* Change to fixed height instead of flexible growth */
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  overflow: visible; /* Allow content to be fully visible */
 }
+
+
 .simulation-container {
   padding: 10px;
   background-color: #f8f8f8;
   border: 1px solid #ddd;
+  display: flex;
+  justify-content: center; /* Center the field horizontally */
+  align-items: center; /* Center the field vertically */
+  width: fit-content; /* Size to content */
+  margin: 0 auto; /* Center the container itself */
 }
 button {
   padding: 8px 16px;
@@ -131,12 +143,11 @@ h3 {
 #runButton:hover {
   background-color: #45a049;
 }
-
-/* Field Simulation Styles */
+/* Improve the field layout */
 .field {
   display: flex;
   flex-direction: column;
-  margin: 20px 0;
+  margin: 0; /* Remove margin that might cause spacing issues */
 }
 .row {
   display: flex;
@@ -166,7 +177,7 @@ h3 {
 }
 
 /* Responsive adjustments */
-@media (max-width: 992px) {
+@media (max-width: 600px) {
   .container {
     flex-direction: column;
   }
@@ -192,7 +203,7 @@ h3 {
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 200px) {
   .element {
     width: 30px;
     height: 30px;
