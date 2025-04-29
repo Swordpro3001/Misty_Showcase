@@ -350,7 +350,7 @@ class Feld:
         col = int(next_pos[1])
         
         if row >= 0 and row < 5 and col >= 0 and col < 5:
-            if self.field[row][col] != 'w':  # Not a wall
+            if self.field[nrow][col] != 'w':  # Not a wall
                 self.position = next_pos
                 return True
         return False
