@@ -41,7 +41,7 @@ pre {
   border: 1px solid #ddd;
   padding: 10px;
   flex: 0 0 auto;
-  max-height: 25%;
+  max-height: 20vh;
   overflow-y: auto;
 }
 #pythonCode, .output-section, .field-simulation {
@@ -52,7 +52,7 @@ pre {
   background-color: #000;
   color: #fff;
   font-family: monospace;
-  height: 100px; /* Fixed height */
+  max-height: 10vh; /* Fixed height */
   overflow-y: auto;
 }
 
