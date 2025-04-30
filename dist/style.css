@@ -1,16 +1,26 @@
+/* Import Jetbrains Mono font */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
+  font-family: 'JetBrains Mono', monospace;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
 body {
   display: flex;
   flex-direction: column;
+
 }
 .navbar {
   flex: 0 0 auto;
   height: 56px;
+  
 }
 .container {
   display: flex;
@@ -34,7 +44,7 @@ body {
 pre {
   white-space: pre-wrap;
   word-wrap: break-word;
-  margin-bottom:0 ;
+  margin-bottom:0; /* Apply Jetbrains Mono */
 }
 #pythonCode {
   background-color: #f8f8f8;
@@ -43,6 +53,7 @@ pre {
   flex: 0 0 auto;
   max-height: 20vh;
   overflow-y: auto;
+  font-family: 'JetBrains Mono', monospace; /* Apply Jetbrains Mono */
 }
 #pythonCode, .output-section, .field-simulation {
   min-height: 0; /* Allow sections to shrink if needed */
@@ -51,7 +62,6 @@ pre {
   padding: 10px;
   background-color: #000;
   color: #fff;
-  font-family: monospace;
   max-height: 10vh; /* Fixed height */
   overflow-y: auto;
 }
@@ -62,7 +72,6 @@ pre {
   flex-direction: column;
   overflow: visible; /* Allow content to be fully visible */
 }
-
 
 .simulation-container {
   background-color: #f8f8f8;
@@ -81,6 +90,7 @@ button {
   color: white;
   border: none;
   border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
 }
 button:hover {
   background-color: #45a049;
@@ -114,6 +124,7 @@ h3 {
   margin-top: 10px;
   margin-bottom: 5px;
 }
+
 /* Override Bootstrap button styles when needed */
 #generateButton, #runButton {
   padding: 8px 16px;
@@ -217,4 +228,3 @@ h3 {
     height: 20px;
   }
 }
-
