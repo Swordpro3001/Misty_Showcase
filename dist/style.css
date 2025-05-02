@@ -12,6 +12,27 @@ html, body {
   font-style: normal;
   font-size: 0.9rem; /* Reduced base font size */
 }
+h1 {
+  font-size: 2rem;
+  font-weight: bolder;
+  color: #0d6efd;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+h2 {
+  font-size: 1.7rem;
+  font-weight: bolder;
+  color: #0d6efd;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+h3 {
+  font-size: 1.5rem;
+  font-weight: bolder;
+  color: #0d6efd;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
 
 body {
   display: flex;
@@ -60,7 +81,7 @@ pre {
   border: 1px solid #ddd;
   padding: 10px;
   flex: 0 0 auto;
-  max-height: 20vh;
+  max-height: 30vh;
   overflow-y: auto;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.8rem; /* Smaller code */
@@ -80,20 +101,19 @@ pre {
 }
 
 .field-simulation {
-  flex: 0 0 auto;
+  flex: 1 auto;
   display: flex;
   flex-direction: column;
   overflow: visible;
+  justify-content: end;
 }
 
 .simulation-container {
-  background-color: #f8f8f8;
-  border: 1px solid #ddd;
   display: flex;
   justify-content: center;
   align-items: center;
   width: fit-content;
-  margin: 0 auto;
+  margin: 2vh auto;
 }
 
 button {
@@ -113,7 +133,8 @@ button:hover {
 }
 
 .status {
-  margin-top: 10px;
+  margin-left: 30vw;
+  margin-top: 0;
   padding: 5px;
   background-color: #f0f0f0;
   border-left: 4px solid #2196F3;
@@ -142,23 +163,18 @@ button:hover {
   min-height: 0;
 }
 
-h3 {
-  margin-top: 10px;
-  margin-bottom: 5px;
-  font-size: 1.1rem; /* Smaller heading */
-}
 
 /* Override Bootstrap button styles when needed */
 #generateButton, #runButton {
-  padding: 6px 14px;
+  padding: 10px 14px;
   margin: 5px;
   border: none;
   border-radius: 4px;
-  font-size: 0.8rem; /* Smaller button text */
+  font-size: 0.9rem; /* Smaller button text */
 }
 
 #generateButton {
-  background-color: #007bff;
+  background-color: #0d6efd;
 }
 
 #runButton {
@@ -175,10 +191,10 @@ h3 {
 
 /* Improve the field layout */
 .api-toggle-container {
-  margin-left: 15px;
+  margin: 3px 4vw 0 15px ;
   display: flex;
   align-items: center;
-  font-size: 0.8rem; /* Smaller toggle text */
+  font-size: 0.9rem; /* Smaller toggle text */
 }
 
 .form-check-input:checked {
@@ -262,7 +278,7 @@ h3 {
     font-size: 1rem;
   }
   
-  pre, #pythonCode, #outputContainer, button, .status {
+  pre, #pythonCode, #outputContainer, button {
     font-size: 0.75rem;
   }
 }
@@ -288,7 +304,7 @@ h3 {
     font-size: 0.8rem;
   }
   
-  pre, #pythonCode, #outputContainer, button, .status {
+  pre, #pythonCode, #outputContainer, button {
     font-size: 0.7rem;
   }
 }
