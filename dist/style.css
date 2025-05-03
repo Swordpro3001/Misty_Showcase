@@ -59,6 +59,7 @@ body {
   height: 100%;
 }
 
+/* Improved layout for code container and output sections */
 #codeContainer {
   width: 50%;
   padding: 10px;
@@ -67,6 +68,7 @@ body {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 pre {
@@ -80,11 +82,12 @@ pre {
   background-color: #f8f8f8;
   border: 1px solid #ddd;
   padding: 10px;
-  flex: 0 0 auto;
+  flex: 1 1 auto; /* Allow this to grow and shrink */
+  min-height: 100px;
   max-height: 30vh;
   overflow-y: auto;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8rem; /* Smaller code */
+  font-size: 0.8rem;
 }
 
 #pythonCode, .output-section, .field-simulation {
@@ -95,25 +98,30 @@ pre {
   padding: 10px;
   background-color: #000;
   color: #fff;
-  max-height: 10vh;
+  height: 15vh; /* Fixed height */
+  min-height: 80px;
+  max-height: 15vh;
   overflow-y: auto;
-  font-size: 0.8rem; /* Smaller output text */
+  font-size: 0.8rem;
 }
 
 .field-simulation {
-  flex: 1 auto;
+  flex: 0 0 auto; /* Don't grow or shrink */
   display: flex;
   flex-direction: column;
   overflow: visible;
-  justify-content: end;
+  height: auto;
+  min-height: 20vh;
 }
+
 
 .simulation-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: fit-content;
-  margin: 2vh auto;
+  margin: 0 auto;
+  min-height: 200px;
 }
 
 button {
@@ -133,14 +141,22 @@ button:hover {
 }
 
 .status {
-  margin-left: 30vw;
-  margin-top: 0;
-  padding: 5px;
+  margin-left: auto; /* Push to the right side */
+  margin-right: 10px;
+  padding: 8px;
   background-color: #f0f0f0;
   border-left: 4px solid #2196F3;
-  font-size: 0.8rem; /* Smaller status text */
+  font-size: 0.8rem;
+  max-width: 30%; /* Limit width to prevent pushing buttons */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal; /* Allow text to wrap inside the container */
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  line-height: 1.2;
+  max-height: 40px; /* Enough for two lines of text */
 }
-
 #mainContainer {
   max-width: 100% !important;
   padding: 0;
@@ -151,16 +167,18 @@ button:hover {
 .buttons-container {
   flex: 0 0 auto;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* Prevent wrapping of items */
   align-items: center;
+  justify-content: flex-start;
+  width: 100%;
 }
 
 .output-section {
-  flex: 0 0 auto;
+  flex: 0 0 auto; /* Don't grow or shrink */
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  min-height: 0;
+  height: auto;
 }
 
 
