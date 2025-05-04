@@ -1,5 +1,6 @@
 /* Import Jetbrains Mono font */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Space+Grotesk:wght@300..700&display=swap');
 
 html, body {
   height: 100%;
@@ -12,6 +13,7 @@ html, body {
   font-style: normal;
   font-size: 0.9rem; /* Reduced base font size */
 }
+
 h1 {
   font-size: 2rem;
   font-weight: bolder;
@@ -19,6 +21,7 @@ h1 {
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
 h2 {
   font-size: 1.7rem;
   font-weight: bolder;
@@ -26,6 +29,7 @@ h2 {
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
 h3 {
   font-size: 1.5rem;
   font-weight: bolder;
@@ -48,6 +52,7 @@ body {
   font-size: 1rem; /* Smaller navbar links */
 }
 
+
 .container {
   display: flex;
   flex: 1;
@@ -63,7 +68,7 @@ body {
 #codeContainer {
   width: 50%;
   padding: 10px;
-  background: #f4f4f4;
+  background: #fefefe;
   border-left: 1px solid #ccc;
   overflow-y: auto;
   display: flex;
@@ -79,6 +84,8 @@ pre {
 }
 
 #pythonCode {
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   background-color: #f8f8f8;
   border: 1px solid #ddd;
   padding: 10px;
@@ -95,6 +102,9 @@ pre {
 }
 
 #outputContainer {
+  border-radius: 10px;
+  
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 10px;
   background-color: #000;
   color: #fff;
@@ -103,6 +113,14 @@ pre {
   max-height: 15vh;
   overflow-y: auto;
   font-size: 0.8rem;
+}
+
+.output-section {
+  flex: 0 0 auto; /* Don't grow or shrink */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: auto;
 }
 
 .field-simulation {
@@ -126,6 +144,7 @@ pre {
 
 button {
   padding: 6px 14px; /* Slightly smaller padding */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin: 5px;
   cursor: pointer;
   background-color: #4CAF50;
@@ -146,6 +165,8 @@ button:hover {
   padding: 8px;
   background-color: #f0f0f0;
   border-left: 4px solid #2196F3;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   font-size: 0.8rem;
   max-width: 30%; /* Limit width to prevent pushing buttons */
   overflow: hidden;
@@ -157,6 +178,7 @@ button:hover {
   line-height: 1.2;
   max-height: 40px; /* Enough for two lines of text */
 }
+
 #mainContainer {
   max-width: 100% !important;
   padding: 0;
@@ -172,15 +194,6 @@ button:hover {
   justify-content: flex-start;
   width: 100%;
 }
-
-.output-section {
-  flex: 0 0 auto; /* Don't grow or shrink */
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  height: auto;
-}
-
 
 /* Override Bootstrap button styles when needed */
 #generateButton, #runButton {
@@ -224,6 +237,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   margin: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .row {
