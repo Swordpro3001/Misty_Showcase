@@ -1,29 +1,48 @@
-/* Import Jetbrains Mono font */
+/* Import fonts */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 /* Base font size reduction */
-body {
+html, body {
+  height: 100%;
   font-size: 0.9rem;
+  scroll-padding-top: 60px; /* Prevents navbar from being covered when scrolling to anchors */
 }
 
-/* Navbar logo styling */
-.navbar-brand img {
-  margin-right: 8px;
-  vertical-align: middle;
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Make navbar sticky with higher z-index */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1100; /* Increased z-index to ensure it stays above scrollbar */
+  width: 100%;
 }
 
 /* Documentation layout */
 .doc-container {
   display: block;
   padding: 20px;
-  height: calc(100% - 56px);
-  overflow-y: auto;
+  flex: 1 0 auto;
+  width: 100%;
+}
+
+.wraper{
+  display: flex;
+  flex: 1;
+  overflow-y: scroll;
+  align-self: stretch;
 }
 
 /* Sidebar styles */
 .doc-sidebar {
   position: sticky;
-  top: 0;
+  top: 70px; /* Adjusted to account for navbar height */
   height: fit-content;
   padding: 15px;
   background-color: #f8f9fa;
@@ -71,15 +90,18 @@ body {
   margin-bottom: 20px;
   border-bottom: 1px solid #dee2e6;
   font-size: 1.5rem;
+  scroll-margin-top: 70px; /* Ensures headings aren't hidden under navbar when linked */
 }
 
 .doc-section h3 {
   margin: 25px 0 15px;
   font-size: 1.2rem;
+  scroll-margin-top: 70px; /* Ensures headings aren't hidden under navbar when linked */
 }
 
 .doc-section h4 {
   font-size: 1rem;
+  scroll-margin-top: 70px; /* Ensures headings aren't hidden under navbar when linked */
 }
 
 .doc-section p, .doc-section li {
@@ -130,6 +152,13 @@ pre.code-block {
   background-color: #f8f9fa;
 }
 
+/* Footer positioning */
+.footer {
+  flex-shrink: 0;
+  width: 100%;
+  margin-top: auto;
+}
+
 /* Responsive adjustments for documentation */
 @media (max-width: 768px) {
   .doc-container {
@@ -139,5 +168,6 @@ pre.code-block {
   .doc-sidebar {
     position: relative;
     margin-bottom: 20px;
+    top: 0;
   }
 }

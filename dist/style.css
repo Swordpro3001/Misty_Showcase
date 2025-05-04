@@ -14,7 +14,7 @@ html, body {
   font-size: 0.9rem; /* Reduced base font size */
 }
 
-h1 {
+h1 { 
   font-size: 2rem;
   font-weight: bolder;
   color: #0d6efd;
@@ -48,15 +48,50 @@ body {
   height: 56px;
 }
 
-.nav-link, .navbar-text, .dropdown-item {
-  font-size: 1rem; /* Smaller navbar links */
+/* Navbar logo styling */
+.navbar-brand {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 18pt;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand img {
+  margin-right: 8px;
+}
+
+/* Custom Scrollbar - Updated to not overlap navbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  z-index: 1; /* Lower z-index than navbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #fff;
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #0d6efd;
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0b5ed7;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #0d6efd #fff;
 }
 
 
-.container {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
+.nav-link, .navbar-text, .dropdown-item {
+  font-size: 1rem; /* Smaller navbar links */
 }
 
 #blocklyDiv {
@@ -184,6 +219,11 @@ button:hover {
   padding: 0;
   margin: 0;
   height: calc(100% - 56px);
+}
+
+main {
+  flex: 1;
+  overflow-y: scroll;
 }
 
 .buttons-container {
@@ -340,3 +380,89 @@ button:hover {
     font-size: 0.7rem;
   }
 }
+
+  
+  /* Footer styles */
+  .footer {
+    background-color: #343a40;
+    color: #fff;
+    padding: 3rem 0;
+    margin-top: 2rem;
+  }
+  
+  .footer-column {
+    margin-bottom: 2rem;
+  }
+  
+  .footer-heading {
+    color: #fff;
+    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+    font-weight: 700;
+  }
+  
+  .footer-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .footer-list li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .footer-list a {
+    color: #adb5bd;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .footer-list a:hover {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transition: background-color 0.3s;
+  }
+  
+  .social-icon:hover {
+    background-color: #0d6efd;
+  }
+  
+  .copyright {
+    background-color: #212529;
+    color: #6c757d;
+    padding: 1.5rem 0;
+    text-align: center;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .about-container {
+      padding: 1rem;
+    }
+    
+    .team-photo {
+      width: 150px;
+      height: 150px;
+      font-size: 4rem;
+    }
+    
+    .footer {
+      padding: 2rem 0;
+    }
+  }
