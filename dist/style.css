@@ -215,6 +215,7 @@ button:hover {
 }
 
 #mainContainer {
+  display: flex;
   max-width: 100% !important;
   padding: 0;
   margin: 0;
@@ -280,9 +281,10 @@ main {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.row {
+.srow {
   display: flex;
   flex-direction: row;
+  padding: 2% 15%;
 }
 
 .element {
@@ -312,7 +314,7 @@ main {
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
-  .container {
+  .scontainer {
     flex-direction: column;
   }
   
@@ -386,7 +388,7 @@ main {
   .footer {
     background-color: #343a40;
     color: #fff;
-    padding: 3rem 0;
+    padding: 3rem 2rem;
     margin-top: 2rem;
   }
   

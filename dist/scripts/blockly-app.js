@@ -253,133 +253,30 @@ async function initPyodide() {
     
     
     const response = await fetch('/static/Misty.py');
-    if (!response.ok) {
-      console.warn(`HTTP error loading Misty.py! status: ${response.status}`);
-      // Create a mock Misty class if we can't load the real one
-      pyodide.FS.writeFile("Misty.py", `
-class Misty:
-    def __init__(self, ip, use_real_api=False):
-        self.ip = ip
-        self.use_real_api = use_real_api
-        print(f"Initialized Misty with IP: {ip}, Using real API: {use_real_api}")
-        self.position = "00"
-        self.direction = 0  # 0: North, 1: East, 2: South, 3: West
-    
-    def get_position(self):
-        return self.position
-        
-    def set_position(self, pos):
-        self.position = pos
-        
-    def get_direction(self):
-        return self.direction
-        
-    def set_direction(self, dir):
-        self.direction = dir % 4
-        
-    def mistyResponse(self, command, parameters):
-        if self.use_real_api:
-            import requests as rq
-            response = rq.post(f"http://{self.ip}/api/{command}", params=parameters)
-            print(f"API Call: http://{self.ip}/api/{command}")
-            print(f"Parameters: {parameters}")
-            print(f"Response: {response.status_code}")
-        else:
-            print(f"SIMULATION: Would call API: {command}")
-            print(f"SIMULATION: With parameters: {parameters}")
-`);
-    } else {
-      const mistyPyCode = await response.text();
+    const mistyPyCode = await response.text();
       
       // Modify the Misty class to handle the toggle
-      const modifiedMistyCode = mistyPyCode.replace(
-        'def __init__(self, ip):',
-        'def __init__(self, ip, use_real_api=False):\n        self.use_real_api = use_real_api'
-      ).replace(
-        'def mistyResponse(self, command, parameters):',
-        `def mistyResponse(self, command, parameters):
-        if not self.use_real_api:
-            print(f"SIMULATION: Would call API: {command}")
-            print(f"SIMULATION: With parameters: {parameters}")
-            return
+    const modifiedMistyCode = mistyPyCode.replace(
+      'def __init__(self, ip):',
+      'def __init__(self, ip, use_real_api=False):\n        self.use_real_api = use_real_api'
+    ).replace(
+      'def mistyResponse(self, command, parameters):',
+      `def mistyResponse(self, command, parameters):
+      if not self.use_real_api:
+          print(f"SIMULATION: Would call API: {command}")
+          print(f"SIMULATION: With parameters: {parameters}")
+          return
 `
-      );
+    );
       
-      pyodide.FS.writeFile("Misty.py", modifiedMistyCode);
-    }
+    pyodide.FS.writeFile("Misty.py", modifiedMistyCode);
     
     const response2 = await fetch('/static/feld.py');
-    if (!response2.ok) {
-      console.warn(`HTTP error loading Feld.py! status: ${response2.status}`);
-      // Create a mock Feld class if we can't load the real one
-      pyodide.FS.writeFile("Feld.py", `
-class Feld:
-    def __init__(self, misty):
-        self.misty = misty
-        self.position = "00"
-        self.direction = 0  # 0: North, 1: East, 2: South, 3: West
-        self.field = [
-            [' ', ' ', ' ', 'k', 'w'], 
-            ['w', 'w', ' ', 'w', 'w'], 
-            ['k', 'w', ' ', ' ', 'k'], 
-            [' ', ' ', ' ', 'w', 'w'], 
-            [' ', ' ', ' ', 'k', 'w']
-        ]
     
-    def get_position(self):
-        return self.position
-        
-    def get_next_position(self):
-        row = int(self.position[0])
-        col = int(self.position[1])
-        
-        if self.direction == 0:  # North
-            row = max(0, row - 1)
-        elif self.direction == 1:  # East
-            col = min(4, col + 1)
-        elif self.direction == 2:  # South
-            row = min(4, row + 1)
-        elif self.direction == 3:  # West
-            col = max(0, col - 1)
-            
-        return f"{row}{col}"
     
-    def forward(self):
-        next_pos = self.get_next_position()
-        row = int(next_pos[0])
-        col = int(next_pos[1])
-        
-        if row >= 0 and row < 5 and col >= 0 and col < 5:
-            if self.field[nrow][col] != 'w':  # Not a wall
-                self.position = next_pos
-                return True
-        return False
-        
-    def rotate(self):
-        self.direction = (self.direction + 3) % 4  # Turn left (counterclockwise)
-        return True
-        
-    def getKorn(self):
-        row = int(self.position[0])
-        col = int(self.position[1])
-        
-        if self.field[row][col] == 'k':
-            self.field[row][col] = ' '
-            return True
-        return False
-        
-    def misty_drive(self, steps):
-        success = True
-        for _ in range(int(steps)):
-            if not self.forward():
-                success = False
-                break
-        return success
-`);
-    } else {
-      const feldPyCode = await response2.text();
-      pyodide.FS.writeFile("Feld.py", feldPyCode);
-    }
+    const feldPyCode = await response2.text();
+    pyodide.FS.writeFile("Feld.py", feldPyCode);
+    
     
     // Configure stdout capture
     await pyodide.runPythonAsync(`
