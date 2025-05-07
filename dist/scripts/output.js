@@ -1,22 +1,127 @@
-// Initial field state
-let field = [
-    [' ', ' ', ' ', 'k', 'w'], 
-    ['w', 'w', ' ', 'w', 'w'], 
-    ['k', 'w', ' ', ' ', 'k'], 
-    [' ', ' ', ' ', 'w', 'w'], 
-    [' ', ' ', ' ', 'k', 'w']
-];
-
+// Field state will be loaded from XML
+let field = [];
 let misty;
 let mistyDirection = 0; // 0: East, 1: South, 2: West, 3: North
 let isInitialized = false;
+let mistyPosition = { row: 0, column: 0 }; // To store Misty's initial position
 
 document.addEventListener("DOMContentLoaded", function(){
     // Initialize the field when the page loads
     if (!isInitialized) {
-        initializeField();
+        loadFieldFromXML();
     }
 });
+
+function loadFieldFromXML() {
+    // Get the XML file
+    const xmlRequest = new XMLHttpRequest();
+    xmlRequest.open('GET', 'test.xml', true);
+    xmlRequest.onreadystatechange = function() {
+        if (this.readyState === 4 && this.status === 200) {
+            const xmlDoc = this.responseXML;
+            
+            // Parse field data from XML
+            parseFieldXML(xmlDoc);
+            
+            // Create the field UI
+            initializeField();
+        }
+    };
+    xmlRequest.send();
+}
+
+function parseFieldXML(xmlDoc) {
+    // Reset field
+    field = [];
+    
+    // Get all rows from XML
+    const rows = xmlDoc.querySelectorAll('field > row');
+    
+    // Process each row
+    rows.forEach((row, rowIndex) => {
+        const rowArray = [];
+        const columns = row.querySelectorAll('column');
+        
+        // Process each column in the row
+        columns.forEach((column, colIndex) => {
+            let cellContent = ' ';
+            
+            // Check for wall
+            if (column.getAttribute('wall') === 'true') {
+                cellContent = 'w';
+            }
+            // Check for corn/grain
+            else if (column.getAttribute('corn') === 'true') {
+                cellContent = 'k';
+            }
+            
+            // Check if this is Misty's position
+            const mistyElement = column.querySelector('misty');
+            if (mistyElement) {
+                mistyPosition.row = rowIndex;
+                mistyPosition.column = colIndex;
+                mistyDirection = getDirectionFromRotation(mistyElement.getAttribute('rotation') || 'east');
+            }
+            
+            rowArray.push(cellContent);
+        });
+        
+        field.push(rowArray);
+    });
+    
+    console.log("Loaded field from XML:", field);
+    console.log("Misty position:", mistyPosition);
+}
+
+function getDirectionFromRotation(rotation) {
+    // Convert string direction to numeric direction
+    switch(rotation.toLowerCase()) {
+        case 'east': return 0;
+        case 'south': return 1;
+        case 'west': return 2;
+        case 'north': return 3;
+        default: return 0; // Default to East
+    }
+}
+
+function saveFieldToXML() {
+    // This would update the XML file with the current state
+    // Note: This would require server-side support to actually save the file
+    console.log("Field state would be saved to XML");
+    
+    // For now, we'll just log what would be saved
+    const xmlOutput = createFieldXML();
+    console.log("XML representation:", xmlOutput);
+}
+
+function createFieldXML() {
+    // Create XML representation of current field state
+    let xmlContent = '<xml version="1.0" id="fieldsim">\n    <field>\n';
+    
+    for (let i = 0; i < field.length; i++) {
+        xmlContent += `        <row name="${i+1}">\n`;
+        
+        for (let j = 0; j < field[i].length; j++) {
+            const hasCorn = field[i][j] === 'k';
+            const hasWall = field[i][j] === 'w';
+            
+            xmlContent += `            <column nr="${j+1}" corn="${hasCorn}" wall="${hasWall}">`;
+            
+            // Add Misty if this is her position
+            if (i === mistyPosition.row && j === mistyPosition.column) {
+                const directionNames = ['east', 'south', 'west', 'north'];
+                xmlContent += `\n                <misty rotation="${directionNames[mistyDirection]}">\n            `;
+            }
+            
+            xmlContent += '</column>\n';
+        }
+        
+        xmlContent += '        </row>\n';
+    }
+    
+    xmlContent += '    </field>\n</xml>';
+    return xmlContent;
+}
 
 function initializeField() {
     // Clear previous field if it exists
@@ -25,7 +130,6 @@ function initializeField() {
         feldContainer.innerHTML = '';
         createField(field);
         placeMisty();
-        mistyDirection = 0; // Reset direction to East
         isInitialized = true;
     }
 }
@@ -71,6 +175,14 @@ function pickUp(id) {
         const grain = element.querySelector('.grain');
         element.removeChild(grain);
         console.log(`Picked up grain at ${id}`);
+        
+        // Update our field data structure
+        const row = parseInt(id[0]);
+        const col = parseInt(id[1]);
+        if (field[row] && field[row][col] === 'k') {
+            field[row][col] = ' ';
+        }
+        
         return true;
     }
     console.log(`No grain found at ${id}`);
@@ -89,10 +201,17 @@ function placeMisty() {
     // Update Misty's direction
     updateMistyDirection();
     
-    // Place at starting position
-    const startPosition = document.getElementById("00");
+    // Place at starting position from XML
+    const startPosition = document.getElementById(`${mistyPosition.row}${mistyPosition.column}`);
     if (startPosition) {
         startPosition.appendChild(misty);
+    } else {
+        // Fallback to position 0,0 if the specified position doesn't exist
+        const fallbackPosition = document.getElementById("00");
+        if (fallbackPosition) {
+            mistyPosition = { row: 0, column: 0 };
+            fallbackPosition.appendChild(misty);
+        }
     }
 }
 
@@ -120,6 +239,10 @@ function rotateMisty() {
     mistyDirection = (mistyDirection + 3) % 4; // Rotate counterclockwise
     updateMistyDirection();
     console.log(`Rotated misty to direction: ${mistyDirection}`);
+    
+    // Update misty position in data model
+    mistyPosition.direction = mistyDirection;
+    
     return true;
 }
 
@@ -131,6 +254,13 @@ function move(from, to) {
     if (fromElement && toElement && fromElement.contains(misty)) {
         fromElement.removeChild(misty);
         toElement.appendChild(misty);
+        
+        // Update our Misty position in data model
+        const row = parseInt(to[0]);
+        const col = parseInt(to[1]);
+        mistyPosition.row = row;
+        mistyPosition.column = col;
+        
         return true;
     }
     console.log("Move failed: Elements not found or misty not in fromElement");
@@ -153,7 +283,11 @@ window.fieldFunctions = {
         return rotateMisty();
     },
     reset: function() {
-        initializeField();
+        loadFieldFromXML();
+        return true;
+    },
+    saveState: function() {
+        saveFieldToXML();
         return true;
     }
 };

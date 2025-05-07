@@ -1,0 +1,41 @@
+<xml version="1.0" id="fieldsim">
+    <field>
+        <row name="1">
+            <column nr="1" corn="false" wall="false">
+                <misty rotation="west">
+            </column>
+            <column nr="2" corn="false" wall="false"></column>
+            <column nr="3" corn="false" wall="false"></column>
+            <column nr="4" corn="false" wall="false"></column>
+            <column nr="5" corn="false" wall="false"></column>
+        </row>
+        <row name="2">
+            <column nr="1" corn="false" wall="false"></column>
+            <column nr="2" corn="false" wall="false"></column>
+            <column nr="3" corn="false" wall="false"></column>
+            <column nr="4" corn="false" wall="false"></column>
+            <column nr="5" corn="false" wall="false"></column>
+        </row>
+        <row name="3">
+            <column nr="1" corn="false" wall="false"></column>
+            <column nr="2" corn="false" wall="false"></column>
+            <column nr="3" corn="false" wall="false"></column>
+            <column nr="4" corn="false" wall="false"></column>
+            <column nr="5" corn="false" wall="false"></column>
+        </row>
+        <row name="4">
+            <column nr="1" corn="false" wall="false"></column>
+            <column nr="2" corn="false" wall="false"></column>
+            <column nr="3" corn="false" wall="false"></column>
+            <column nr="4" corn="false" wall="false"></column>
+            <column nr="5" corn="false" wall="false"></column>
+        </row>
+        <row name="5">
+            <column nr="1" corn="false" wall="false"></column>
+            <column nr="2" corn="false" wall="false"></column>
+            <column nr="3" corn="false" wall="false"></column>
+            <column nr="4" corn="false" wall="false"></column>
+            <column nr="5" corn="false" wall="false"></column>
+        </row>
+    </field>
+</xml>

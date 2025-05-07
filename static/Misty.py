@@ -192,8 +192,3 @@ class Misty:
         self.setLEDHex("000000")
         sleep(3)
 
-if __name__ == "__main__":
-    m = Misty("192.168.149.120")
-    m.wait(2)
-    m.dance()
-
