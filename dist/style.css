@@ -38,6 +38,11 @@ h3 {
   margin-bottom: 5px;
 }
 
+.blocklyTreeRow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+}
+
 body {
   display: flex;
   flex-direction: column;
