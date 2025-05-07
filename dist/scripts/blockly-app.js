@@ -160,11 +160,13 @@ ${code}`;
   
   pythonGenerator.forBlock['forward'] = function(block) {
     return `feld.forward()
-print("Moving forward one block")
-# Update simulation
-current_pos = feld.get_position()
-updateField("move", current_pos, feld.get_next_position())
-\n`;
+  print("Moving forward one block")
+  # Update simulation
+  from_pos = feld.get_position()
+  to_pos = feld.get_next_position()
+  print(f"Updating field: move from {from_pos} to {to_pos}")
+  updateField("move", from_pos, to_pos)
+  \n`;
   };
   
   pythonGenerator.forBlock['forward_fuer'] = function(block) {
@@ -331,26 +333,38 @@ async function runPythonCode() {
     return;
   }
   
-  let apiStatus = useRealAPI ? "with real API" : "in simulation mode";
+  let apiStatus = useRealAPI === "True" ? "with real API" : "in simulation mode";
   statusContainer.textContent = `Status: Running code ${apiStatus}...`;
   outputContainer.textContent = `Running code ${apiStatus}...`;
   
   try {
     // Reset output
     await pyodide.runPythonAsync("sys.stdout.value = ''");
+
+    // Make sure the field simulation is reset before running
+    document.getElementById('feld').innerHTML = '';
+    initializeField();
     
-    // Execute code
-    await pyodide.runPythonAsync(currentCode);
-    
-    // Get and display output
-    const stdout = await pyodide.runPythonAsync("sys.stdout.value");
-    if (stdout && stdout.trim() !== "") {
-      outputContainer.textContent = stdout;
-    } else {
-      outputContainer.textContent = "Code executed, but no output was generated. Check your code.";
-    }
-    
-    statusContainer.textContent = `Status: Code execution completed ${apiStatus}.`;
+    // Execute code with a small delay to ensure UI is updated
+    setTimeout(async () => {
+      try {
+        await pyodide.runPythonAsync(currentCode);
+        
+        // Get and display output
+        const stdout = await pyodide.runPythonAsync("sys.stdout.value");
+        if (stdout && stdout.trim() !== "") {
+          outputContainer.textContent = stdout;
+        } else {
+          outputContainer.textContent = "Code executed, but no output was generated. Check your code.";
+        }
+        
+        statusContainer.textContent = `Status: Code execution completed ${apiStatus}.`;
+      } catch (error) {
+        console.error("Execution error:", error);
+        outputContainer.textContent = "Error during execution: " + error.message;
+        statusContainer.textContent = "Status: Error during execution!";
+      }
+    }, 100);
   } catch (error) {
     console.error("Execution error:", error);
     outputContainer.textContent = "Error during execution: " + error.message;

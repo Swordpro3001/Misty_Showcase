@@ -27,6 +27,9 @@ function initializeField() {
         placeMisty();
         mistyDirection = 0; // Reset direction to East
         isInitialized = true;
+        console.log("Field initialized successfully");
+    } else {
+        console.error("Field container not found!");
     }
 }
 
@@ -62,6 +65,7 @@ function createField(field){
     }
     
     document.getElementById("feld").appendChild(feld);
+    console.log("Field created with dimensions:", field.length, "x", field[0].length);
 }
 
 function pickUp(id) {
@@ -84,6 +88,7 @@ function placeMisty() {
         misty.className = "misty";
         misty.src = "./pictures/Bild1.png";
         misty.style.transition = "transform 0.5s";
+        misty.alt = "Misty robot"; // Add alt text for accessibility
     }
     
     // Update Misty's direction
@@ -93,6 +98,9 @@ function placeMisty() {
     const startPosition = document.getElementById("00");
     if (startPosition) {
         startPosition.appendChild(misty);
+        console.log("Misty placed at position 00");
+    } else {
+        console.error("Starting position element not found!");
     }
 }
 
@@ -114,6 +122,7 @@ function updateMistyDirection() {
             misty.style.transform = "rotate(270deg)";
             break;
     }
+    console.log("Misty direction updated to:", mistyDirection);
 }
 
 function rotateMisty() {
@@ -128,13 +137,37 @@ function move(from, to) {
     const fromElement = document.getElementById(from);
     const toElement = document.getElementById(to);
     
-    if (fromElement && toElement && fromElement.contains(misty)) {
+    if (!fromElement) {
+        console.error(`Source element ${from} not found`);
+        return false;
+    }
+    
+    if (!toElement) {
+        console.error(`Target element ${to} not found`);
+        return false;
+    }
+    
+    if (!fromElement.contains(misty)) {
+        console.error(`Misty not found in element ${from}`);
+        return false;
+    }
+    
+    // Check if target is a wall
+    if (toElement.style.backgroundColor === "rgb(221, 97, 74)") { // Wall color in RGB
+        console.error(`Can't move to ${to} - it's a wall`);
+        return false;
+    }
+    
+    // Perform the move
+    try {
         fromElement.removeChild(misty);
         toElement.appendChild(misty);
+        console.log(`Successfully moved Misty from ${from} to ${to}`);
         return true;
+    } catch (error) {
+        console.error("Error during move:", error);
+        return false;
     }
-    console.log("Move failed: Elements not found or misty not in fromElement");
-    return false;
 }
 
 function sleep(ms) {
@@ -144,15 +177,19 @@ function sleep(ms) {
 // Add functions that can be called from Python via Pyodide
 window.fieldFunctions = {
     move: function(from, to) {
+        console.log(`Python called move from ${from} to ${to}`);
         return move(from, to);
     },
     pickUp: function(pos) {
+        console.log(`Python called pickUp at ${pos}`);
         return pickUp(pos);
     },
     rotate: function() {
+        console.log(`Python called rotate`);
         return rotateMisty();
     },
     reset: function() {
+        console.log(`Python called reset`);
         initializeField();
         return true;
     }
