@@ -289,7 +289,7 @@ main {
 .srow {
   display: flex;
   flex-direction: row;
-  padding: 2% 15%;
+  padding: 0 15%;
 }
 
 .element {
