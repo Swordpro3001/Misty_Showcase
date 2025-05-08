@@ -116,10 +116,7 @@ class Misty:
         self.mistyResponse("drive/hdt", parameters)
 
     def driveGrid(self):
-        self.setFaceVisibility(True)
-        for i in range(4):
-            self.driveTimed(50, 0, 647)
-            sleep(2)
+        self.driveTimed(50,0,1315)
         sleep(3)
 
     def driveGridRev(self):

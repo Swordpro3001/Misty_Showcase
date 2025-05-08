@@ -1,11 +1,10 @@
 // Initial field state
-let field = [
-    [' ', ' ', ' ', 'k', 'w'], 
-    ['w', 'w', ' ', 'w', 'w'], 
-    ['k', 'w', ' ', ' ', 'k'], 
-    [' ', ' ', ' ', 'w', 'w'], 
-    [' ', ' ', ' ', 'k', 'w']
-];
+let field =  [
+    [' ', ' ', ' ', 'w'], 
+    ['w', 'w', ' ', 'w'], 
+    ['k', 'w', ' ', 'k'], 
+    [' ', ' ', 'k', 'w']
+]
 
 let misty;
 let mistyDirection = 0; // 0: East, 1: South, 2: West, 3: North
@@ -42,20 +41,26 @@ function createField(field){
         newDiv.className = "row";
         
         for(let j = 0; j < field[i].length; j++){
-            const newElement = document.createElement("div");
+            let newElement = document.createElement("div");
             newElement.className = "element";
             let id = i+""+j;
             newElement.id = id;
             
             if(field[i][j] === 'w'){
-                newElement.style.backgroundColor = "#DD614A"; // Wall color
+                const wall = document.createElement("img");
+                wall.className = "wall";
+                wall.src = "./pictures/bricks.jpg";
+                wall.alt = "Wall";
+                newElement.appendChild(wall); // Füge das Bild in das bestehende element-Div ein
+                newElement.style.backgroundColor = "#9E8576"; // optional Bodenfarbe
             } else if (field[i][j] === 'k'){
-                const grain = document.createElement("div");
+                const grain = document.createElement("img");
                 grain.className = "grain";
+                grain.src = "./pictures/Akku.png"
                 newElement.appendChild(grain);
-                newElement.style.backgroundColor = "#9E8576"; // Floor color
+                newElement.style.backgroundColor = "#cfc19d"; // Floor color
             } else {
-                newElement.style.backgroundColor = "#9E8576"; // Floor color
+                newElement.style.backgroundColor = "#cfc19d"; // Floor color
             }
             
             newDiv.appendChild(newElement);

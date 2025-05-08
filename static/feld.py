@@ -10,11 +10,11 @@ class Feld:
         self.rottable = [0, 1, 2, 3]
         # Initialize field with walls (w) and grains (k)
         self.field = [
-            [' ', ' ', ' ', 'k', 'w'], 
-            ['w', 'w', ' ', 'w', 'w'], 
-            ['k', 'w', ' ', ' ', 'k'], 
-            [' ', ' ', ' ', 'w', 'w'], 
-            [' ', ' ', ' ', 'k', 'w']
+            [' ', ' ', ' ', 'w'], 
+            ['w', 'w', ' ', 'w'], 
+            ['k', 'w', ' ', 'k'], 
+            [' ', ' ', 'k', 'w'], 
+            [' ', ' ', ' ', 'w']
         ]
         print(f"Initialized Feld with Misty at position ({self.curI}, {self.curJ}), direction: {self.rotation}")
     

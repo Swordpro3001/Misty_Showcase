@@ -75,6 +75,8 @@
                   <li><a href="#audio">Audio & Display</a></li>
                 </ul>
               </li>
+              <li><a href="#information">Further Information</a></li>
+              <li><a href="#connection">File System</a></li>
               <li><a href="#examples">Example Projects</a></li>
               <li><a href="#troubleshooting">Troubleshooting</a></li>
               <li><a href="#faq">FAQ</a></li>
@@ -156,7 +158,9 @@
             
             <div class="doc-section" id="misty-api">
               <h2>Misty API</h2>
-              <p>The Misty API blocks provide access to robot functions and capabilities.</p>
+              <p>The Misty API blocks provide access to robot functions and capabilities. You can find the official
+                documentation <a href="https://docs.mistyrobotics.com/misty-ii/web-api/api-reference/" target="_blank">here</a>.
+              </p>
               
               <div id="movement">
                 <h3>Movement Functions</h3>
@@ -187,6 +191,11 @@
                         <td>none</td>
                         <td>Stop all movement immediately</td>
                       </tr>
+                      <tr>
+                        <td><code>halt()</code></td>
+                        <td>none</td>
+                        <td>Stop all motors immediately</td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -210,7 +219,66 @@
                   <li><strong>Change Expression</strong> - Change the facial expression</li>
                   <li><strong>Display Text</strong> - Show text on Misty's display</li>
                 </ul>
+                
+                <div class="api-params">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Function</th>
+                        <th>Parameters</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code>playSound()</code></td>
+                        <td>filename (String)</td>
+                        <td>Let Misty play a sound that is saved on her drive</td>
+                      </tr>
+                      <tr>
+                        <td><code>say()</code></td>
+                        <td>text (String)</td>
+                        <td>Lets Misty talk</td>
+                      </tr>
+                      <tr>
+                        <td><code>setLEDRGB()</code></td>
+                        <td>r, g, b (0-255)</td>
+                        <td>Changes the color of Misty's LED</td>
+                      </tr>
+                      <tr>
+                        <td><code>setDisplayText()</code></td>
+                        <td>text (String)</td>
+                        <td>Displays text on Misty's display</td>
+                      </tr>
+                      <tr>
+                        <td><code>setVolume()</code></td>
+                        <td>volume (0-100)</td>
+                        <td>Sets Misty's volume</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
               </div>
+            </div>
+
+            <div class="doc-section" id="information">
+              <h2>Further information</h2>
+              <p>Some facts we have gathered from working with Misty</p>
+              <ul>
+                <li><strong>Operating System</strong> - Misty runs on Windows</li>
+                <li><strong>Skills</strong> - You can write skills for Misty, which then can be saved to her drive</li>
+                <li><strong>Charging</strong> - Misty is charged through a charging pad, but stops charging after four hours if she is turned off</li>
+                <li><strong>Connection</strong> - You can connect to Misty with the "Misty App". It only works on iOS</li>
+                <lI><strong>Misty Web</strong> - To access Misty's web interface you have to find out her IP-address
+                access it from a browser. It is crucial that both you and Misty are in the same network</lI>
+              </ul>
+            </div>
+
+            <div class="doc-section" id="connection">
+              <h2>Accessing Misty's file system</h2>
+              <p>To access the file system use <code>ssh {password}:administrator@{IP}</code>. The password is on the 
+              Misty's bottom. You will start out in the directory <code>C:\Data\Users\administrator</code>.</p>
             </div>
             
             <div class="doc-section" id="examples">

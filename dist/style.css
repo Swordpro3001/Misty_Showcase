@@ -301,11 +301,17 @@ main {
   justify-content: center;
   align-items: center;
 }
+
+.wall {
+  width: 60px;
+  height: 60px;
+  border-radius: 3px;
+  object-fit: cover; 
+  display: block; 
+}
 .grain {
-  width: 20px;
   height: 20px;
-  background-color: #FFD700;
-  border-radius: 50%;
+  
 }
 
 .misty {

@@ -63,10 +63,15 @@ body {
 .doc-sidebar ul {
   list-style-type: none;
   padding-left: 0;
+  margin-top: 6px;
 }
 
 .doc-sidebar ul li {
   margin-bottom: 6px;
+}
+
+.doc-sidebar li {
+  margin-left: 6px;
 }
 
 .doc-sidebar ul li a {
@@ -108,6 +113,17 @@ body {
 
 .doc-section p, .doc-section li {
   font-size: 0.85rem;
+}
+
+.doc-section a {
+  color: #495057;
+  text-decoration: none;
+}
+
+.doc-section i {
+  background-color: #f3f3f3;
+  padding: 2px;
+  border-radius: 6px;
 }
 
 /* Code formatting */
