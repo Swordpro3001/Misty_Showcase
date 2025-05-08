@@ -61,7 +61,8 @@
             <h5>Table of Contents</h5>
             <ul>
               <li><a href="#getting-started">Getting Started</a></li>
-              <li><a href="#blocks-overview">Blocks Overview</a>
+              <li><a href="#Setup">Setup</a></li>
+              <li><a href="#blocks-overview">Blocks Overview</a></li>
                 <ul>
                   <li><a href="#logic-blocks">Logic Blocks</a></li>
                   <li><a href="#loop-blocks">Loop Blocks</a></li>
@@ -87,6 +88,7 @@
         <!-- Main Content -->
         <div class="col-lg-9">
           <div class="doc-content">
+            <h1>Misty-Showcase Documentation</h1>
             <div class="doc-section" id="getting-started">
               <h2>Getting Started</h2>
               <p>Welcome to the Misty Showcase documentation! This guide will help you get started with block-based Python programming for the Misty robot.</p>
@@ -98,11 +100,27 @@
               <p>To use Misty Showcase, you need:</p>
               <ul>
                 <li>A modern web browser (Chrome, Firefox, Edge, or Safari)</li>
+                <li>Node and npm</li>
                 <li>Internet connection for loading resources</li>
                 <li>Optional: Misty robot for deploying your programs to hardware</li>
               </ul>
+            </div>
+            <div class="doc-section" id="Setup">
+              <h2>Setup Guide</h2>
+
+              <h4>1. Clone the Repository</h4>
+              <p>To get started, clone the Git repository, which includes the full application, scripts, and dependencies.</p>
               
-              <h3>Your First Program</h3>
+              <code>git clone https://github.com/Swordpro3001/Misty_Showcase</code> 
+              <p>You can also access the repository directly:</p>
+              <h4>2. Install Dependencies</h4>
+              <p>Once the repository is cloned, install the required dependencies using the following command:npm install
+                This will automatically fetch and install all necessary packages.</p>
+              <h3>3. Start the Server</h3>
+              <p>To run the application, execute the following command:<code>npm run start</code></p> 
+              <p>This will start the webserver and is reachable on: <code>localhost:3000</code></p>
+                  
+              <h2>Your First Program</h2>
               <p>To create your first program:</p>
               <ol>
                 <li>From the homepage, select the workspace area</li>
