@@ -16,30 +16,25 @@ class Misty:
     # Stop all motor control
     def halt(self):
         self.setFaceVisibility(True)
-        self.mistyResponse("halt","test")
+        self.mistyResponse("halt", "test")
 
     # Stop Moving
     def stop(self):
         self.setFaceVisibility(True)
-        self.mistyResponse("drive/stop","test")
+        self.mistyResponse("drive/stop", "test")
 
     def wait(self, tsec):
         self.setFaceVisibility(True)
         sleep(tsec)
-        
-    
-        
 
     """ 
     Expression
     """
-    # Takes a hex value and sets the LED color to that Value
     def setLEDHex(self, hex):
         self.setFaceVisibility(True)
         hexint = int(hex, 16)
         self.setLEDRGB(hexint & 0xFF, (hexint >> 8) & 0xFF, (hexint >> 16) & 0xFF)
 
-    # Takes r, g and b as parameters and sets the LED accordingly
     def setLEDRGB(self, r, g, b):
         self.setFaceVisibility(True)
         parameters = {
@@ -55,7 +50,7 @@ class Misty:
             "Text": text
         }
         self.mistyResponse("tts/speak", parameters)
-        
+
     def setVolume(self, volume):
         self.setFaceVisibility(True)
         parameters = {
@@ -63,19 +58,17 @@ class Misty:
         }
         self.mistyResponse("audio/volume", parameters)
 
-
     def setFaceVisibility(self, visible):
         parameters = {
             "Visible": visible
         }
         self.mistyResponse("images/settings", parameters)
-        
-        
+
     def setDisplayText(self, text):
         parameters = {"Text": text}
         self.setFaceVisibility(False)
         self.mistyResponse("text/display", parameters)
-        
+
     def setDisplayTextSetting(self, text, size, weight, r, g, b):
         self.setFaceVisibility(True)
         parameters = {
@@ -91,10 +84,10 @@ class Misty:
         }
         self.setFaceVisibility(False)
         self.mistyResponse("text/settings", parameters)
+
     """
     Movement Functions
     """
-    # Drive in a Straight line
     def drive(self, linvel, angvel):
         self.setFaceVisibility(True)
         parameters = {
@@ -103,7 +96,6 @@ class Misty:
         }
         self.mistyResponse("drive", parameters)
 
-    # Drive with all parameters
     def driveTimed(self, linvel, angvel, timems):
         self.setFaceVisibility(True)
         parameters = {
@@ -123,23 +115,18 @@ class Misty:
         }
         self.mistyResponse("drive/hdt", parameters)
 
-    # def driveGrid(self):
-    #     self.driveTimed(50, 0, 1330)
-    #     sleep(3)
-
     def driveGrid(self):
         self.setFaceVisibility(True)
         for i in range(4):
             self.driveTimed(50, 0, 647)
             sleep(2)
         sleep(3)
-        
+
     def driveGridRev(self):
         self.setFaceVisibility(True)
         self.driveTimed(-50, 0, 1330)
         sleep(3)
 
-    # Turn
     def turnLeft(self):
         self.setFaceVisibility(True)
         self.driveTimed(0, 100, 4435)
@@ -191,9 +178,3 @@ class Misty:
         self.mistyResponse("arms/set", parameters)
         self.setLEDHex("000000")
         sleep(3)
-
-if __name__ == "__main__":
-    m = Misty("192.168.149.120")
-    m.wait(2)
-    m.dance()
-

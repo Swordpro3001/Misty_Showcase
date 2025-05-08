@@ -160,12 +160,12 @@ ${code}`;
   
   pythonGenerator.forBlock['forward'] = function(block) {
     return `feld.forward()
-  print("Moving forward one block")
-  # Update simulation
-  from_pos = feld.get_position()
-  to_pos = feld.get_next_position()
-  print(f"Updating field: move from {from_pos} to {to_pos}")
-  updateField("move", from_pos, to_pos)
+print("Moving forward one block")
+# Update simulation
+from_pos = feld.get_position()
+to_pos = feld.get_next_position()
+print(f"Updating field: move from {from_pos} to {to_pos}")
+updateField("move", from_pos, to_pos)
   \n`;
   };
   
@@ -256,20 +256,28 @@ async function initPyodide() {
     
     const response = await fetch('/static/Misty.py');
     const mistyPyCode = await response.text();
-      
-      // Modify the Misty class to handle the toggle
+    // Modify the Misty class to handle the toggle
     const modifiedMistyCode = mistyPyCode.replace(
-      'def __init__(self, ip):',
-      'def __init__(self, ip, use_real_api=False):\n        self.use_real_api = use_real_api'
+      /def __init__\(self, ip\):[\s\S]+?self.setLEDHex\("000000"\)/,
+      `def __init__(self, ip, use_real_api=False):
+            self.ip = ip
+            self.api_url = f"http://{self.ip}/api/"
+            self.use_real_api = use_real_api
+            self.setLEDHex("000000")`
     ).replace(
-      'def mistyResponse(self, command, parameters):',
+      /def mistyResponse\(self, command, parameters\):[\s\S]+?print\(parameters\)/,
       `def mistyResponse(self, command, parameters):
-      if not self.use_real_api:
-          print(f"SIMULATION: Would call API: {command}")
-          print(f"SIMULATION: With parameters: {parameters}")
-          return
-`
+            if not self.use_real_api:
+                print(f"SIMULATION: Would call API: {command}")
+                print(f"SIMULATION: With parameters: {parameters}")
+                return
+            response = rq.post(f"{self.api_url}{command}", params=parameters)
+            print(f"{self.api_url}{command}\\n{response}\\n{response.text}")
+            print(parameters)`
     );
+      
+
+    
       
     pyodide.FS.writeFile("Misty.py", modifiedMistyCode);
     
@@ -291,20 +299,20 @@ async function initPyodide() {
       import js
       
       try:
-          from Misty import Misty
-          from Feld import Feld
+        from Misty import Misty
+        from Feld import Feld
       except Exception as e:
-          print(f"Error importing modules: {e}")
+        print(f"Error importing modules: {e}")
 
       class StdoutCatcher:
-          def __init__(self):
-              self.value = ""
-          
-          def write(self, text):
-              self.value += text
-          
-          def flush(self):
-              pass
+        def __init__(self):
+            self.value = ""
+        
+        def write(self, text):
+            self.value += text
+        
+        def flush(self):
+            pass
 
       sys.stdout = StdoutCatcher()
       
