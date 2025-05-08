@@ -148,6 +148,7 @@ pre {
   padding: 10px;
   background-color: #000;
   color: #fff;
+  border: 1px solid #dee2e6;
   height: 15vh; /* Fixed height */
   min-height: 80px;
   max-height: 15vh;
@@ -170,6 +171,7 @@ pre {
   overflow: visible;
   height: auto;
   min-height: 20vh;
+  margin-top: 15px;
 }
 
 
@@ -283,7 +285,7 @@ main {
   display: flex;
   flex-direction: column;
   margin: 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  
 }
 
 .srow {
@@ -295,7 +297,8 @@ main {
 .element {
   width: 60px;
   height: 60px;
-  border-radius: 3px;
+  border-radius: 10px;
+  margin: 5px;
   position: relative;
   display: flex;
   justify-content: center;
